@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Typography Overrides ── */
+.track-tighter { letter-spacing: -0.04em; }
+.track-tight   { letter-spacing: -0.02em; }
+.track-widest  { letter-spacing:  0.1em;  }
+
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar { 
+    width: 8px; 
+    height: 8px;
+}
+::-webkit-scrollbar-track { 
+    background: #F0F1FA; 
+}
+::-webkit-scrollbar-thumb { 
+    background: #5561A6; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #062EED; 
+}
+
+/* ── Noise Background (Subtle Texture) ── */
+.bg-noise {
+    position: fixed; 
+    inset: 0; 
+    z-index: 0;
+    pointer-events: none; 
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ── Micro Animations & Interaction ── */
+.reveal { 
+    opacity: 0; 
+    transform: translateY(30px); 
+    transition: all 0.8s cubic-bezier(0.16,1,0.3,1); 
+}
+.reveal.active { 
+    opacity: 1; 
+    transform: translateY(0); 
+}
+
+.draw-line { 
+    width: 0; 
+    transition: width 1.5s cubic-bezier(0.16,1,0.3,1); 
+}
+.draw-line.active { 
+    width: 100%; 
+}
+
+/* Cinematic Scroll-Driven Fallbacks (Overdrive) */
+@supports (animation-timeline: view()) {
+    .reveal {
+        opacity: 0;
+        animation: cinematic-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 25%;
+        transition: none !important;
+        transform: none;
+    }
+    
+    .draw-line {
+        width: 0;
+        animation: cinematic-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 30%;
+        transition: none !important;
+    }
+    
+    @keyframes cinematic-reveal {
+        from { opacity: 0; transform: translateY(80px) scale(0.95); filter: blur(10px); }
+        to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    @keyframes cinematic-draw {
+        from { width: 0%; }
+        to { width: 100%; }
+    }
+}
+
+.shadow-glass {
+    box-shadow: 0 8px 32px 0 rgba(2, 15, 91, 0.05);
+}
+
+.shadow-hover {
+    box-shadow: 0 20px 40px -15px rgba(6, 46, 237, 0.25);
+}
+
+/* ApexCharts Overrides for Bemobi Brand */
+.apexcharts-tooltip {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(85, 97, 166, 0.1) !important;
+    box-shadow: 0 8px 32px 0 rgba(2, 15, 91, 0.08) !important;
+    border-radius: 12px !important;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.apexcharts-tooltip-title {
+    background: #F0F1FA !important;
+    border-bottom: 1px solid rgba(85, 97, 166, 0.1) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #5561A6 !important;
+    padding: 8px 12px !important;
+}
+
+.apexcharts-legend-text {
+    font-family: 'Poppins', sans-serif !important;
+    color: #020F5B !important;
+}

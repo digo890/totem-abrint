@@ -1,0 +1,2130 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "axisWidth": 0,
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "log": 10,
+              "type": "log"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 7,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.79,
+        "fullHighlight": true,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "always",
+        "stacking": "none",
+        "text": {
+          "valueSize": 12
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Mês",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": " select \r\n TO_CHAR(date_trunc('month', i.due_date), 'MM/YY') AS \"Mês\",\r\n COUNT(DISTINCT i.id) as \"Faturas\"  \r\n from invoices i\r\n where i.company_id = '$company_id'\r\n AND (NOT i.is_negotiation OR i.negotiation_type = 2)\r\n AND i.status <> 5\r\n AND i.due_date::date >= '${data_inicio}'::date\r\n AND i.due_date::date <= '${data_fim}'::date\r\n group BY date_trunc('month', i.due_date)\r\n ORDER BY date_trunc('month', i.due_date);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Numero de Faturas no Mês",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cartão de Crédito"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pix"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Boleto"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 5,
+        "x": 7,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    ct.name AS \"Tipo de Recebimento\",\r\n    ROUND(\r\n        (COUNT(DISTINCT p.id) * 100.0) / SUM(COUNT(DISTINCT p.id)) OVER (), 2) AS \"(%)\"\r\nFROM payments p\r\nINNER JOIN charges c ON p.charge_id = c.id \r\n    AND p.company_id = c.company_id\r\nINNER JOIN invoices i ON c.invoice_id = i.id \r\n    AND c.company_id = i.company_id\r\nINNER JOIN collection_agreements ca ON c.collection_agreement_id = ca.id \r\n    AND ca.company_id = c.company_id\r\nINNER JOIN collection_types ct ON ca.collection_type_id = ct.id\r\nWHERE p.company_id = '$company_id'\r\n    AND NOT p.deleted\r\n    AND (NOT i.is_negotiation OR i.negotiation_type = 2)\r\n    AND p.paid_at::date >= '${data_inicio}'::date\r\n    AND p.paid_at::date <= '${data_fim}'::date\r\nGROUP BY ct.name\r\nORDER BY \"(%)\" DESC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Porcentagem de pagamentos",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": true,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) Pix"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) Boleto"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) POS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) Cartão de Crédito"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    DATE_TRUNC('month', p.paid_at) AS \"time\",\r\n    ct.name AS \"Tipo de Recebimento\",\r\n    --COUNT(DISTINCT p.id) AS \"Qt.\",\r\n    ROUND(\r\n        (COUNT(DISTINCT p.id) * 100.0) / \r\n        SUM(COUNT(DISTINCT p.id)) OVER (PARTITION BY DATE_TRUNC('month', p.paid_at)), \r\n        2\r\n    ) AS \"(%)\"\r\nFROM payments p\r\nINNER JOIN charges c ON p.charge_id = c.id AND p.company_id = c.company_id\r\nINNER JOIN invoices i ON c.invoice_id = i.id AND c.company_id = i.company_id\r\nINNER JOIN collection_agreements ca ON c.collection_agreement_id = ca.id AND ca.company_id = c.company_id\r\nINNER JOIN collection_types ct ON ca.collection_type_id = ct.id\r\nWHERE p.company_id = '$company_id'\r\n  AND NOT p.deleted\r\n  AND (NOT i.is_negotiation OR i.negotiation_type = 2)\r\n  AND p.paid_at::date >= '${data_inicio}'::date\r\n  AND p.paid_at::date <= '${data_fim}'::date\r\nGROUP BY DATE_TRUNC('month', p.paid_at), ct.name\r\nORDER BY 1,\"(%)\" desc;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Porcentagem de pagamentos por Forma",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "Tipo de Recebimento"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "axisWidth": 0,
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 7,
+        "x": 0,
+        "y": 10
+      },
+      "id": 5,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 1,
+        "fullHighlight": false,
+        "groupWidth": 0.88,
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "vertical",
+        "showValue": "always",
+        "stacking": "none",
+        "text": {
+          "valueSize": 12
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Mês de Vencimento",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH invoice_payments AS (\r\n    -- CTE para obter todas as faturas com informações de pagamento\r\n    SELECT DISTINCT\r\n        i.id,\r\n        i.status,\r\n        i.due_date,\r\n        i.company_id,\r\n        p.paid_at,\r\n        p.id as payment_id,\r\n        -- Classificação do pagamento baseada no MÊS de vencimento vs MÊS de pagamento\r\n        CASE\r\n            WHEN p.id IS NULL  THEN 'nunca_paga' -- Não existe registro de pagamento\r\n            WHEN date_trunc('month', p.paid_at) <= date_trunc('month', i.due_date) THEN 'paga_em_dia' -- Paga no mês de vencimento ou antes\r\n            WHEN date_trunc('month', p.paid_at) > date_trunc('month', i.due_date) AND p.paid_at::date <= '${data_fim}'::date THEN 'paga_posteriormente' -- Paga após o mês de vencimento\r\n            ELSE 'desconhecido'\r\n        END as classificacao_pagamento\r\n    FROM invoices i\r\n    JOIN charges c ON i.id = c.invoice_id AND i.company_id = c.company_id\r\n    LEFT JOIN payments p ON p.charge_id = c.id AND p.company_id = c.company_id\r\n    WHERE i.company_id = '$company_id'\r\n        and i.status <> 5 \r\n        and c.status <> 5\r\n        AND (i.is_negotiation IS FALSE OR i.negotiation_type = 2)\r\n        -- Faturas que venciam no período especificado\r\n        AND i.due_date::date >= '${data_inicio}'::date\r\n        AND i.due_date::date <= '${data_fim}'::date\r\n),\r\ninvoice_summary AS (\r\n    -- CTE para resumir por fatura (uma linha por fatura)\r\n    SELECT DISTINCT\r\n        i.id,\r\n        i.due_date,\r\n        i.company_id,\r\n        -- Para faturas com múltiplos pagamentos, prioriza conforme hierarquia\r\n        CASE\r\n            WHEN COUNT(CASE WHEN i.classificacao_pagamento = 'paga_em_dia' THEN 1 END) > 0 THEN 'paga_em_dia'\r\n            WHEN COUNT(CASE WHEN i.classificacao_pagamento = 'paga_posteriormente' THEN 1 END) > 0 THEN 'paga_posteriormente'\r\n            --WHEN COUNT(CASE WHEN i.classificacao_pagamento = 'nunca_paga' THEN 1 END) > 0 THEN 'nunca_paga'\r\n            ELSE 'nunca_paga'\r\n        END as classificacao_final\r\n    FROM invoice_payments i\r\n    GROUP BY i.id, i.due_date, i.company_id\r\n)\r\n-- Query final com os resultados agrupados por mês de vencimento\r\nSELECT\r\n    -- Mês/Ano de vencimento (agrupamento por mês)\r\n    TO_CHAR(date_trunc('month', due_date), 'MM/YYYY') as \"Mês de Vencimento\",    \r\n    -- Pagas no mês de vencimento\r\n    ROUND(\r\n        CASE\r\n            WHEN COUNT(*) > 0 THEN (COUNT(CASE WHEN classificacao_final = 'paga_em_dia' THEN 1 END) * 100.0) / COUNT(*)\r\n            ELSE 0\r\n        END, 2\r\n    ) as \"% Pagas no Mês\",    \r\n    -- Pagas posteriormente (após o mês de vencimento, mas já pagas)\r\n    ROUND(\r\n        CASE\r\n            WHEN COUNT(*) > 0 THEN (COUNT(CASE WHEN classificacao_final = 'paga_posteriormente' THEN 1 END) * 100.0) / COUNT(*)\r\n            ELSE 0\r\n        END, 2\r\n    ) as \"% Pagas Posteriormente\",    \r\n    -- Ainda em aberto (nunca pagas)\r\n    ROUND(\r\n        CASE\r\n            WHEN COUNT(*) > 0 THEN (COUNT(CASE WHEN classificacao_final = 'nunca_paga' THEN 1 END) * 100.0) / COUNT(*)\r\n            ELSE 0\r\n        END, 2\r\n    ) as \"% Ainda em Aberto\"        \r\nFROM invoice_summary\r\nGROUP BY date_trunc('month', due_date)\r\nORDER BY date_trunc('month', due_date);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Inadimplência do Mês",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "%"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pago após vencimento"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pago até o vencimento"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 5,
+        "x": 7,
+        "y": 10
+      },
+      "id": 4,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": []
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    CASE\r\n        WHEN date_trunc('day', p.paid_at) <= date_trunc('day', i.due_date) THEN 'Pago até o vencimento'\r\n        WHEN date_trunc('day', p.paid_at) > date_trunc('day', i.due_date) THEN 'Pago após vencimento'\r\n        ELSE 'Sem classificação'\r\n    END AS \"Ciclo de Pagamento\",\r\n    ROUND((COUNT(DISTINCT p.id) * 100.0) / SUM(COUNT(DISTINCT p.id)) OVER (), 3) AS \"%\"\r\nFROM payments p\r\nINNER JOIN charges c ON p.charge_id = c.id AND p.company_id = c.company_id\r\nINNER JOIN invoices i ON c.invoice_id = i.id AND c.company_id = i.company_id\r\nWHERE p.company_id = '$company_id'\r\n    AND NOT p.deleted\r\n    AND (NOT i.is_negotiation OR i.negotiation_type = 2)\r\n    AND p.paid_at::date >= '${data_inicio}'::date\r\n    AND p.paid_at::date <= '${data_fim}'::date\r\nGROUP BY \"Ciclo de Pagamento\"\r\nORDER BY 1;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Ciclo de Pagamento",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": [
+                "sum"
+              ]
+            },
+            "hideFrom": {
+              "viz": false
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "%"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "md",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\nCASE\r\nWHEN date(p.paid_at) < date(i.due_date) THEN 'Pago antes do vencimento'\r\nWHEN date_trunc('day', p.paid_at) = date_trunc('day', i.due_date) THEN 'Pago no vencimento'\r\nWHEN date(p.paid_at) > date(i.due_date) AND date(p.paid_at) <= date(i.due_date) + INTERVAL '10 days' THEN 'Pagos em até 10 dias após'\r\nWHEN date(p.paid_at) > date(i.due_date) + INTERVAL '10 days' AND date(p.paid_at) <= date(i.due_date) + INTERVAL '20 days' THEN 'Pagos em até 20 dias após'\r\nWHEN date(p.paid_at) > date(i.due_date) + INTERVAL '20 days' AND date(p.paid_at) <= date(i.due_date) + INTERVAL '30 days' THEN 'Pagos em até 30 dias após'\r\nWHEN date(p.paid_at) > date(i.due_date) + INTERVAL '30 days' AND date(p.paid_at) <= date(i.due_date) + INTERVAL '45 days' THEN 'Pagos em até 45 dias após'\r\n--WHEN date(p.paid_at) > date(i.due_date) + INTERVAL '45 days' and date(p.paid_at) <= date(i.due_date) + INTERVAL '60 days' THEN 'Pagos em até 60 dias após'\r\n--WHEN date(p.paid_at) > date(i.due_date) + INTERVAL '60 days' AND date(p.paid_at) <= date(i.due_date) + INTERVAL '75 days' THEN 'Pagos em até 75 dias após'\r\n--WHEN date(p.paid_at) > date(i.due_date) + INTERVAL '75 days' AND date(p.paid_at) <= date(i.due_date) + INTERVAL '90 days' THEN 'Pagos em até 90 dias após'\r\nWHEN date(p.paid_at) > date(i.due_date) + INTERVAL '45 days' THEN 'Pgto após 45 dias depois do vencimento'\r\nELSE 'Sem classificação'\r\nEND AS \"Ciclo de Pagamento\",\r\nCOUNT(DISTINCT p.id) AS \"Quantidade\",\r\nROUND((COUNT(DISTINCT p.id) * 100.0) / SUM(COUNT(DISTINCT p.id)) OVER (), 3) AS \"%\"\r\nFROM payments p\r\nINNER JOIN charges c ON p.charge_id = c.id AND p.company_id = c.company_id\r\nINNER JOIN invoices i ON c.invoice_id = i.id AND c.company_id = i.company_id\r\nWHERE p.company_id = '$company_id'\r\nAND NOT p.deleted\r\nAND (NOT i.is_negotiation OR i.negotiation_type = 2)\r\nAND date_trunc('month', p.paid_at) = date_trunc('month', current_date - INTERVAL '${meses_retroativos}' month)\r\nGROUP BY \"Ciclo de Pagamento\"\r\nORDER BY 1;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Ciclo de Pagamento do Ultimo Mês",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 8,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "showValues": true,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) Pago após o ven."
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) Pago antes do ven."
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "(%) Pago no ven."
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT DATE_TRUNC('month', p.paid_at) AS \"Período\",\r\nCASE\r\nWHEN date(p.paid_at) < date(i.due_date) THEN 'Pago antes do ven.'\r\nWHEN date_trunc('day', p.paid_at) = date_trunc('day', i.due_date) THEN 'Pago no ven.' \r\nWHEN date(p.paid_at) > date(i.due_date) THEN 'Pago após o ven.'\r\nELSE 'Sem classificação'\r\nEND AS \"Ciclo de Pagamento\",\r\n    ROUND(\r\n        (COUNT(DISTINCT p.id) * 100.0) / \r\n        SUM(COUNT(DISTINCT p.id)) OVER (PARTITION BY DATE_TRUNC('month', p.paid_at)), \r\n        2\r\n    ) AS \"(%)\"\r\nFROM payments p\r\nINNER JOIN charges c ON p.charge_id = c.id AND p.company_id = c.company_id\r\nINNER JOIN invoices i ON c.invoice_id = i.id AND c.company_id = i.company_id\r\nWHERE p.company_id = '$company_id'\r\nAND NOT p.deleted\r\nAND (NOT i.is_negotiation OR i.negotiation_type = 2)\r\n  AND p.paid_at::date >= '${data_inicio}'::date\r\n  AND p.paid_at::date <= '${data_fim}'::date\r\nGROUP BY \"Período\", \"Ciclo de Pagamento\"\r\nORDER BY 1;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Ciclo de Pagamento",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "Ciclo de Pagamento"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "shades"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "axisWidth": 0,
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "log": 2,
+              "type": "log"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 7,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.8,
+        "fullHighlight": true,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [
+            "sum",
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "horizontal",
+        "showValue": "always",
+        "stacking": "none",
+        "text": {
+          "valueSize": 12
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n  TO_CHAR(date_trunc('month', i.created_at), 'MM/YYYY') AS \"Mês\",\r\n  COUNT(*) AS \"Quantidade\"\r\nFROM invoices AS i\r\nJOIN charges as c on c.invoice_id = i.id and c.company_id = i.company_id\r\nWHERE \r\n  i.company_id = '$company_id'\r\n  AND i.deleted = false\r\n  AND i.is_negotiation = true\r\n  AND i.status = 3 and c.status = 3\r\n\tAND i.created_at::date >= '${data_inicio}'::date\r\n  AND i.created_at::date <= '${data_fim}'::date\r\nGROUP BY date_trunc('month', i.created_at)\r\nORDER BY date_trunc('month', i.created_at);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Numero de Negociação",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "shades"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisWidth": 0,
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "super-light-yellow",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor Final"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currency:financial:R$ "
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 8,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.8,
+        "fullHighlight": true,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [
+            "sum",
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "horizontal",
+        "showValue": "always",
+        "stacking": "none",
+        "text": {
+          "valueSize": 12
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n  TO_CHAR(date_trunc('month', i.created_at), 'MM/YYYY') AS \"Mês\",\r\n  --COUNT(*) AS \"Quantidade\",\r\n  SUM(i.amount + i.fine_amount + i.interest_amount - i.discount) AS \"Valor Final\"\r\nFROM invoices AS i\r\nJOIN charges as c on c.invoice_id = i.id and c.company_id = i.company_id\r\nWHERE \r\n  i.company_id = '$company_id'\r\n  AND i.deleted = false\r\n  AND i.is_negotiation = true\r\n  AND i.status = 3 and c.status = 3\r\n  and c.deleted = false\r\n\tAND i.created_at::date >= '${data_inicio}'::date\r\n  AND i.created_at::date <= '${data_fim}'::date\r\nGROUP BY date_trunc('month', i.created_at)\r\nORDER BY date_trunc('month', i.created_at);",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Valor em Negociações",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currency:financial:R$ "
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Pagas"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Geradas"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "% Pago"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "id": 9,
+      "options": {
+        "cellHeight": "md",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH negociacoes_pagas AS (\r\n  SELECT\r\n    i.origin,\r\n    CASE i.origin\r\n      WHEN 1 THEN 'ERP'\r\n      WHEN 2 THEN 'Hotsite Pix'\r\n      WHEN 3 THEN 'Portal do Cliente'\r\n      WHEN 4 THEN 'Plataforma'\r\n      WHEN 5 THEN 'API'\r\n      WHEN 6 THEN 'PixGen'\r\n      WHEN 7 THEN 'Portal de Negociação'\r\n      WHEN 8 THEN 'Portal Internet Pré-paga'\r\n      WHEN 9 THEN 'Portal da inadimplência'\r\n      WHEN 10 THEN 'Agente de Cobrança'\r\n      WHEN 11 THEN 'Regra de Notificação'\r\n      WHEN 12 THEN 'Omnichannel'\r\n      WHEN 13 THEN 'Grace'\r\n      WHEN 14 THEN 'Negociação do Operador'\r\n      ELSE 'Origem Desconhecida'\r\n    END AS origem_negociacao,\r\n    COUNT(*) AS quantidade,\r\n    SUM(i.amount) AS valor_base,\r\n    SUM(i.fine_amount) AS multa,\r\n    SUM(i.interest_amount) AS juros,\r\n    SUM(i.discount) AS desconto,\r\n    SUM(i.amount + i.fine_amount + i.interest_amount - i.discount) AS valor_final\r\n  FROM invoices AS i\r\n  WHERE\r\n    i.company_id = '$company_id'\r\n    AND i.deleted = false\r\n    AND i.is_negotiation = true\r\n    AND i.status = 3\r\n    AND date_trunc('month', i.created_at) = date_trunc('month', current_date - INTERVAL '${meses_retroativos}' month)\r\n  GROUP BY i.origin\r\n),\r\ntotal_geral AS (\r\n  SELECT\r\n    origin,\r\n    COUNT(*) AS total\r\n  FROM invoices\r\n  WHERE\r\n    company_id = '$company_id'\r\n    AND deleted = false\r\n    AND is_negotiation = true\r\n    AND date_trunc('month', created_at) = date_trunc('month', current_date - INTERVAL '${meses_retroativos}' month)\r\n  GROUP BY origin\r\n)\r\nSELECT\r\n  np.origem_negociacao AS \"Orig. Negociação\",\r\n  COALESCE(tg.total, 0) AS \"Total Geradas\",\r\n    np.quantidade AS \"Total Pagas\",\r\n  ROUND(\r\n    CASE \r\n      WHEN COALESCE(tg.total, 0) > 0 \r\n      THEN (np.quantidade::NUMERIC / tg.total::NUMERIC) * 100 \r\n      ELSE 0 \r\n    END, \r\n    2\r\n  ) AS \"% Pago\",    \r\n  np.multa AS \"Multa\",\r\n  np.juros AS \"Juros\",\r\n  np.desconto AS \"Desconto\",\r\n  np.valor_final AS \"Valor Final\"\r\nFROM negociacoes_pagas AS np\r\nLEFT JOIN total_geral AS tg ON np.origin = tg.origin",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Negociação - Agrupado por Origem",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor Boleto"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currency:financial:R$ "
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor Pix"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currency:financial:R$ "
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor Cartão"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currency:financial:R$ "
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Valor Outros"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currency:financial:R$ "
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    CASE i.origin\r\n        WHEN 1 THEN 'ERP'\r\n        WHEN 2 THEN 'Hotsite Pix'\r\n        WHEN 3 THEN 'Portal do Cliente'\r\n        WHEN 4 THEN 'Plataforma'\r\n        WHEN 5 THEN 'API'\r\n        WHEN 6 THEN 'PixGen'\r\n        WHEN 7 THEN 'Portal de Negociação'\r\n        WHEN 8 THEN 'Portal Internet Pré-paga'\r\n        WHEN 9 THEN 'Portal da inadimplência'\r\n        WHEN 10 THEN 'Agente de Cobrança'\r\n        WHEN 11 THEN 'Regra de Notificação'\r\n        WHEN 12 THEN 'Omnichannel'\r\n        WHEN 13 THEN 'Grace'\r\n        WHEN 14 THEN 'Negociação do Operador'\r\n        ELSE 'Origem Desconhecida'\r\n    END AS \"Origem da Negociação\",\r\n    COUNT(p.id) FILTER (WHERE ct.name = 'Boleto') AS \"Qtd Boleto\",\r\n    SUM(p.amount) FILTER (WHERE ct.name = 'Boleto') AS \"Valor Boleto\",\r\n    COUNT(p.id) FILTER (WHERE ct.name = 'Pix') AS \"Qtd Pix\",\r\n    SUM(p.amount) FILTER (WHERE ct.name = 'Pix') AS \"Valor Pix\",\r\n    COUNT(p.id) FILTER (WHERE ct.name = 'Cartão de Crédito') AS \"Qtd Cartão\",\r\n    SUM(p.amount) FILTER (WHERE ct.name = 'Cartão de Crédito') AS \"Valor Cartão\"\r\n--    COUNT(p.id) FILTER (WHERE ct.name NOT IN ('Boleto', 'Pix', 'Cartão de Crédito')) AS \"Qtd Outros\",\r\n--    SUM(p.amount) FILTER (WHERE ct.name NOT IN ('Boleto', 'Pix', 'Cartão de Crédito')) AS \"Valor Outros\"   \r\nFROM invoices AS i\r\nJOIN charges AS c ON c.invoice_id = i.id AND c.company_id = i.company_id\r\nJOIN payments AS p ON p.charge_id = c.id AND p.company_id = c.company_id\r\nINNER JOIN collection_agreements ca ON c.collection_agreement_id = ca.id AND ca.company_id = c.company_id\r\nINNER JOIN collection_types ct ON ca.collection_type_id = ct.id\r\nWHERE \r\n    i.company_id = '$company_id'\r\n    AND i.deleted = false\r\n    AND i.is_negotiation = true\r\n    AND i.status = 3\r\n    AND c.status = 3\r\n    AND date_trunc('month', i.created_at) = date_trunc('month', current_date - INTERVAL '${meses_retroativos}' month)\r\nGROUP BY i.origin",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Negociação - Agrupado por Forma de Pagamento",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 2,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": true,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 6,
+        "x": 0,
+        "y": 55
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT date_trunc('month', i.created_at) AS \"Mês\",\r\n  CASE i.origin\r\n    WHEN 1 THEN 'ERP'\r\n    WHEN 2 THEN 'Hotsite Pix'\r\n    WHEN 3 THEN 'Portal do Cliente'\r\n    WHEN 4 THEN 'Plataforma'\r\n    WHEN 5 THEN 'API'\r\n    WHEN 6 THEN 'PixGen'\r\n    WHEN 7 THEN 'Portal de Negociação'\r\n    WHEN 8 THEN 'Portal Internet Pré-paga'\r\n    WHEN 9 THEN 'Portal da inadimplência'\r\n    WHEN 10 THEN 'Agente de Cobrança'\r\n    WHEN 11 THEN 'Regra de Notificação'\r\n    WHEN 12 THEN 'Omnichannel'\r\n    WHEN 13 THEN 'Grace'\r\n    WHEN 14 THEN 'Negociação do Operador'\r\n    ELSE 'Origem Desconhecida'\r\n  END AS \"Origem da Negociação\",\r\n  COUNT(*) AS \"Quantidade\"\r\nFROM invoices AS i\r\nJOIN charges as c on c.invoice_id = i.id and c.company_id = i.company_id\r\n    WHERE \r\n      i.company_id = '$company_id'\r\n      AND i.deleted = false\r\n      AND i.is_negotiation = true\r\n      AND i.status = 3 and c.status = 3\r\n      AND i.created_at::date >= '${data_inicio}'::date\r\n      AND i.created_at::date <= '${data_fim}'::date\r\nGROUP BY i.origin,\"Mês\" \r\nORDER BY i.origin,\"Mês\";",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Origem da Negociação",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "Origem da Negociação"
+            ],
+            "keepFields": false,
+            "naming": {
+              "asLabels": true
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": true,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 6,
+        "x": 6,
+        "y": 55
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "-- Análise de clientes que pagaram em atraso\r\n-- e depois pagaram pontualmente por recorrência - CADA MÊS COMPARADO COM O ANTERIOR\r\nWITH meses_periodo AS (\r\n    -- Gera todos os meses do período informado\r\n    SELECT generate_series(\r\n        date_trunc('month', '${data_inicio}'::date),\r\n        date_trunc('month', '${data_fim}'::date),\r\n        interval '1 month'\r\n    ) as mes_base\r\n),\r\nclientes_atrasados_por_mes AS (\r\n    -- Para cada mês, busca clientes que pagaram em atraso no mês anterior\r\n    SELECT \r\n        mp.mes_base,\r\n        i.customer_id\r\n    FROM meses_periodo mp\r\n    CROSS JOIN payments p\r\n    INNER JOIN charges c ON p.charge_id = c.id \r\n        AND p.company_id = c.company_id\r\n    INNER JOIN invoices i ON c.invoice_id = i.id \r\n        AND c.company_id = i.company_id\r\n    INNER JOIN collection_agreements ca ON c.collection_agreement_id = ca.id \r\n        AND ca.company_id = c.company_id\r\n    INNER JOIN collection_types ct ON ca.collection_type_id = ct.id\r\n    WHERE p.company_id = '$company_id'\r\n        AND p.deleted = FALSE\r\n        AND (i.is_negotiation = FALSE OR i.negotiation_type = 2)\r\n        AND ct.id = 3  -- Cartão de crédito\r\n        -- Pagamentos em atraso do mês anterior ao mês base\r\n        AND p.paid_at::date >= date_trunc('month', mp.mes_base - INTERVAL '1 month')::date\r\n        AND p.paid_at::date <= (date_trunc('month', mp.mes_base - INTERVAL '1 month') + INTERVAL '1 month - 1 day')::date\r\n        AND date_trunc('day', p.paid_at) > date_trunc('day', i.due_date)  -- Pagamento após vencimento\r\n),\r\nclientes_pontuais_por_mes AS (\r\n    -- Para cada mês, busca clientes que pagaram pontualmente por recorrência no mês base\r\n    SELECT \r\n        mp.mes_base,\r\n        i.customer_id\r\n    FROM meses_periodo mp\r\n    CROSS JOIN payments p\r\n    INNER JOIN charges c ON p.charge_id = c.id \r\n        AND p.company_id = c.company_id\r\n    INNER JOIN invoices i ON c.invoice_id = i.id \r\n        AND c.company_id = i.company_id\r\n    INNER JOIN collection_agreements ca ON c.collection_agreement_id = ca.id \r\n        AND ca.company_id = c.company_id\r\n    INNER JOIN collection_types ct ON ca.collection_type_id = ct.id\r\n    WHERE p.company_id = '$company_id'\r\n        AND p.deleted = FALSE\r\n        AND (i.is_negotiation = FALSE OR i.negotiation_type = 2)\r\n        AND ct.id = 3  -- Cartão de crédito\r\n        -- Pagamentos pontuais do mês base\r\n        AND p.paid_at::date >= date_trunc('month', mp.mes_base)::date\r\n        AND p.paid_at::date <= (date_trunc('month', mp.mes_base) + INTERVAL '1 month - 1 day')::date\r\n        AND date_trunc('day', p.paid_at) <= date_trunc('day', i.due_date) + INTERVAL '5' day -- Pagamento até vencimento, mais 5 dias\r\n        AND p.origin = 2  -- Recorrência\r\n),\r\ndados_mensais AS (\r\n    -- Agrupa os dados por mês\r\n    SELECT \r\n        mp.mes_base,\r\n        COUNT(DISTINCT cam.customer_id) as total_atrasados,\r\n        COUNT(DISTINCT cpm.customer_id) as total_recuperados\r\n    FROM meses_periodo mp\r\n    LEFT JOIN clientes_atrasados_por_mes cam ON mp.mes_base = cam.mes_base\r\n    LEFT JOIN clientes_pontuais_por_mes cpm ON mp.mes_base = cpm.mes_base \r\n        AND cam.customer_id = cpm.customer_id  -- Mesmo cliente que estava em atraso\r\n    GROUP BY mp.mes_base\r\n)\r\n-- Resultado final: análise da recuperação por mês\r\nSELECT \r\n    mes_base AS \"Mês Base\",\r\n    CASE \r\n        WHEN total_atrasados > 0 THEN \r\n            ROUND((total_recuperados * 100.0) / total_atrasados, 2)\r\n        ELSE 0 \r\n    END AS \"Taxa de Recuperação (%)\"\r\nFROM dados_mensais\r\nORDER BY mes_base;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Inadimplência recuperada com a Recorrência",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": true,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 6,
+        "x": 12,
+        "y": 55
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH pagamentos_por_mes AS (\r\n    -- Materializa os pagamentos por mês e customer uma única vez\r\n    SELECT DISTINCT\r\n        date_trunc('month', p.paid_at) AS mes,\r\n        i.customer_id\r\n    FROM payments p\r\n    JOIN charges c ON p.charge_id = c.id AND p.company_id = c.company_id\r\n    JOIN collection_agreements ca ON c.collection_agreement_id = ca.id\r\n    JOIN invoices i ON c.invoice_id = i.id\r\n    WHERE c.company_id = '${company_id}'\r\n      AND p.company_id = '${company_id}'\r\n      AND p.paid_at >= date_trunc('month', '${data_inicio}'::date)\r\n      AND p.paid_at < date_trunc('month', '${data_fim}'::date) + INTERVAL '1 month'\r\n      AND ca.collection_type_id = 3\r\n      AND c.status = 3\r\n      AND p.origin = 2\r\n),\r\nclientes_com_anterior AS (\r\n    -- Usa self-join para encontrar clientes retidos em uma única passagem\r\n    SELECT \r\n        atual.mes,\r\n        COUNT(DISTINCT atual.customer_id) AS total_clientes,\r\n        COUNT(DISTINCT anterior.customer_id) AS clientes_retidos\r\n    FROM pagamentos_por_mes atual\r\n    LEFT JOIN pagamentos_por_mes anterior \r\n        ON anterior.customer_id = atual.customer_id\r\n        AND anterior.mes = atual.mes - INTERVAL '1 month'\r\n    GROUP BY atual.mes\r\n),\r\ncom_mes_anterior AS (\r\n    -- Adiciona total de clientes do mês anterior\r\n    SELECT \r\n        mes,\r\n        total_clientes,\r\n        clientes_retidos,\r\n        LAG(total_clientes) OVER (ORDER BY mes) AS clientes_mes_anterior\r\n    FROM clientes_com_anterior\r\n)\r\nSELECT \r\n    mes AS \"Mês\",\r\n    ROUND(\r\n        CASE \r\n            WHEN clientes_mes_anterior > 0 \r\n            THEN (clientes_retidos * 100.0) / clientes_mes_anterior\r\n            ELSE 0 \r\n        END, \r\n        2\r\n    ) AS \"Taxa de Retenção (%)\"\r\nFROM com_mes_anterior\r\nWHERE clientes_mes_anterior IS NOT NULL\r\nORDER BY mes;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Retenção de Recorrência ",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tentativas"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 6,
+        "x": 18,
+        "y": 55
+      },
+      "id": 14,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "dataset": "mhpay",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n    --TO_CHAR(date_trunc('day', p.paid_at ), 'YYYY-MM') AS \"Período\",\r\n    --COUNT(DISTINCT c.id) AS \"Faturas\",\r\n    c.charge_attempt AS \"n.º Tentativa\",\r\n    ROUND(\r\n        COUNT(DISTINCT c.id) * 100.0 / SUM(COUNT(DISTINCT c.id)) OVER (PARTITION BY TO_CHAR(date_trunc('day', p.paid_at), 'YYYY-MM')),\r\n        2\r\n    ) AS \"Tentativas\"\r\nFROM payments p \r\njoin charges c on p.charge_id = c.id and p.company_id = c.company_id\r\nJOIN collection_agreements ca ON c.collection_agreement_id = ca.id and c.company_id = ca.company_id\r\nWHERE c.company_id = '$company_id'\r\nAND p.paid_at::date >= '${data_inicio}'::date\r\nAND p.paid_at::date <= '${data_fim}'::date\r\nAND ca.collection_type_id = 3\r\nAND c.status = 3\r\nand c.charge_attempt > 0\r\nand p.deleted is false\r\nand p.origin = 2\r\nGROUP BY\r\n    TO_CHAR(date_trunc('day', p.paid_at), 'YYYY-MM'),\r\n    c.charge_attempt\r\nORDER BY-- \"Período\", \r\n\"Tentativas\"",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Recorrência -  Eficiência de Cobrança por Tentativa",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "n.º Tentativa"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "piechart"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "Mhnet Telecom",
+          "value": "6856b6af-17ab-4711-948c-359788eeb327"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "e7ff42e5-ab0f-4be4-9e4d-85378a4e23a6"
+        },
+        "definition": "SELECT name AS __text, id AS __value \nFROM companies\nWHERE deleted is false \nAND disabled is false\nORDER by 1",
+        "description": "Empresa",
+        "label": "Empresa",
+        "name": "company_id",
+        "options": [],
+        "query": "SELECT name AS __text, id AS __value \nFROM companies\nWHERE deleted is false \nAND disabled is false\nORDER by 1",
+        "refresh": 1,
+        "regex": "",
+        "regexApplyTo": "value",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "1",
+          "value": "1"
+        },
+        "description": "Meses Retroativos",
+        "label": "Meses Retroativos",
+        "name": "meses_retroativos",
+        "options": [],
+        "query": "0,1,2,3,4,5,6,12",
+        "type": "custom",
+        "valuesFormat": "csv"
+      },
+      {
+        "current": {
+          "text": "20260301",
+          "value": "20260301"
+        },
+        "description": "Data Início (formato YYYYMMDD)",
+        "label": "Data Início",
+        "name": "data_inicio",
+        "options": [
+          {
+            "selected": true,
+            "text": "20260301",
+            "value": "20260301"
+          }
+        ],
+        "query": "20260301",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "20260331",
+          "value": "20260331"
+        },
+        "description": "Data Fim (formato YYYYMMDD)",
+        "label": "Data Fim",
+        "name": "data_fim",
+        "options": [
+          {
+            "selected": true,
+            "text": "20260331",
+            "value": "20260331"
+          }
+        ],
+        "query": "20260331",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-12M",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Painel Estratégico de Gestão de Recebíveis",
+  "uid": "mapxpj8",
+  "version": 79,
+  "weekStart": ""
+}

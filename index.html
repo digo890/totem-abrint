@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bemobi | Dashboard de Pagamentos</title>
+
+    <!-- Google Fonts: Poppins (Brand) & JetBrains Mono (Code/Accents) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Bemobi Brand Colors
+                        b_blue_pure: '#062EED',
+                        b_blue_light: '#B6D5FF',
+                        b_purple_pure: '#6924E1',
+                        b_purple_light: '#CCC8FF',
+                        // Neutral Colors
+                        b_deep_blue: '#020F5B',
+                        b_ocean_blue: '#0B1B73',
+                        b_grey_blue: '#5561A6',
+                        b_white: '#FFFFFF',
+                        b_bone: '#F0F1FA',
+                        // Feedback
+                        b_success: '#40D39E',
+                        b_danger: '#F5326F',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(2, 15, 91, 0.05)',
+                        'hover': '0 20px 40px -15px rgba(6, 46, 237, 0.15)',
+                    },
+                    transitionTimingFunction: {
+                        'swiss': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Iconify for Icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Custom CSS Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="bg-b_bone text-b_deep_blue font-sans antialiased selection:bg-b_blue_pure selection:text-b_white overflow-x-hidden min-h-screen">
+
+    <!-- Noise Overlay -->
+    <div class="bg-noise"></div>
+
+    <!-- Navigation / Top Menu -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent transition-all duration-300">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-10 h-20 flex items-center justify-between relative">
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                <img src="./design-system/assets/bemobi_logo.svg" alt="Bemobi Logo" class="h-10 object-contain">
+            </div>
+
+            <!-- Centered Menu (Sem fundo) -->
+            <div class="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-2">
+                <!-- Links -->
+                <a href="#faturas" class="px-5 py-2 rounded-full bg-b_bone text-b_deep_blue border border-b_grey_blue/10 transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Faturas</a>
+                <a href="#inadimplencia" class="px-5 py-2 rounded-full text-b_grey_blue hover:bg-b_bone/50 hover:text-b_deep_blue transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Inadimplência</a>
+                <a href="#negociacoes" class="px-5 py-2 rounded-full text-b_grey_blue hover:bg-b_bone/50 hover:text-b_deep_blue transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Negociações</a>
+                <a href="#recorrencia" class="px-5 py-2 rounded-full text-b_grey_blue hover:bg-b_bone/50 hover:text-b_deep_blue transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Recorrência</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-36 pb-24 max-w-[1400px] mx-auto px-6 lg:px-10 relative z-10">
+
+        <!-- 1. Visão Geral (KPIs) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-24 reveal active">
+            
+            <!-- Hero KPI (Esquerda) -->
+            <div class="col-span-1 lg:col-span-5 xl:col-span-6 rounded-[2rem] p-8 lg:p-10 text-white relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500 shadow-hover flex flex-col justify-between min-h-[320px]" style="background: linear-gradient(135deg, #6924E1 0%, #062EED 100%);">
+                <!-- Efeito Glass Interno -->
+                <div class="absolute inset-0 bg-white/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <!-- Círculos Abstratos -->
+                <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-b_blue_light/20 blur-xl pointer-events-none"></div>
+                
+                <div class="relative z-10 flex flex-col h-full justify-between">
+                    <div>
+                        <p class="font-mono text-xs uppercase tracking-widest text-white/60 mt-2">Total Recuperado via Régua • Jan/26 – Mar/26</p>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <div class="font-semibold text-4xl lg:text-5xl xl:text-6xl tracking-tighter leading-none"><span class="counter" data-target="2219499.23" data-prefix="R$ " data-decimals="2">R$ 0</span></div>
+                        <p class="font-mono text-xs text-white/40 mt-2 tracking-wide">17.810 acordos processados no período</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2">
+                            <iconify-icon icon="solar:graph-up-linear" class="text-white opacity-80"></iconify-icon>
+                            <span class="text-xs font-medium">Média R$ 739.833/mês</span>
+                        </div>
+                        <div class="bg-b_success/20 border border-b_success/30 px-4 py-2 rounded-full flex items-center gap-2">
+                            <iconify-icon icon="solar:arrow-right-up-linear" class="text-b_success text-sm"></iconify-icon>
+                            <span class="text-xs font-mono font-semibold text-b_success">+94% Jan→Mar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPIs Secundários (Direita) -->
+            <div class="col-span-1 lg:col-span-7 xl:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                <!-- KPI Faturas -->
+                <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-glass group hover:border-b_blue_pure/30 hover:shadow-hover transition-all duration-500 flex flex-col justify-between">
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Total de Faturas</p>
+                        <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="245423">0</span></h3>
+                        <p class="text-xs text-b_grey_blue mb-6">Mar/26 — último mês fechado</p>
+                    </div>
+                    <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_purple_light/20 text-b_purple_pure rounded-full text-xs font-semibold">
+                        <iconify-icon icon="solar:arrow-right-down-linear" class="text-sm"></iconify-icon>
+                        -0.9% vs Fev/26
+                    </div>
+                </div>
+
+                <!-- KPI Inadimplência -->
+                <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-glass group hover:border-b_danger/30 hover:shadow-hover transition-all duration-500 flex flex-col justify-between">
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Inadimplência</p>
+                        <h3 class="font-semibold text-4xl text-b_danger tracking-tight mb-1"><span class="counter" data-target="8.1" data-decimals="1" data-suffix="%">0,0%</span></h3>
+                        <p class="text-xs text-b_grey_blue mb-6">Mar/26 — último mês fechado</p>
+                    </div>
+                    <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_danger/10 text-b_danger rounded-full text-xs font-semibold">
+                        <iconify-icon icon="solar:arrow-right-up-linear" class="text-sm"></iconify-icon>
+                        +1.7pp vs Fev/26
+                    </div>
+                </div>
+
+                <!-- KPI Retenção (Wider) -->
+                <div class="sm:col-span-2 rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-glass group hover:border-b_blue_pure/30 hover:shadow-hover transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Taxa de Retenção</p>
+                        <h3 class="font-semibold text-4xl text-b_blue_pure tracking-tight mb-1"><span class="counter" data-target="88" data-suffix="%">0%</span></h3>
+                        <p class="text-xs text-b_grey_blue">Fev–Mar/26 — recorrência</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="inline-flex items-center gap-1.5 px-4 py-2 bg-b_blue_light/20 text-b_blue_pure rounded-full text-sm font-semibold">
+                            <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg"></iconify-icon>
+                            Estável Fev/Mar
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. Volume & Formas de Pagamento -->
+        <section id="faturas" class="mb-24 scroll-mt-32">
+            <!-- Título de Seção com Linha -->
+            <div class="flex items-center gap-6 mb-10 reveal">
+                <h2 class="font-semibold text-2xl lg:text-3xl text-b_deep_blue tracking-tight">Volume & Formas de Pagamento</h2>
+                <div class="flex-grow h-[1px] bg-b_grey_blue/10 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 h-full bg-b_blue_pure/40 w-full draw-line active"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Gráfico de Barras -->
+                <div class="col-span-1 lg:col-span-8 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.1s;">
+                    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Número de Faturas</p>
+                            <h3 class="font-semibold text-xl text-b_deep_blue">Volume Mensal de Faturas Geradas</h3>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-medium text-b_grey_blue bg-b_bone/50 px-3 py-1.5 rounded-lg border border-b_grey_blue/10">
+                            <div class="w-2.5 h-2.5 rounded-full bg-b_blue_pure"></div> Total Gerado
+                        </div>
+                    </div>
+                    <div id="chart-volume-faturas" role="img" aria-label="Gráfico de barras com o volume mensal de faturas geradas: Janeiro 247.206, Fevereiro 247.721 e Março 245.423" class="w-full h-[350px]"></div>
+                </div>
+
+                <!-- Gráfico de Pizza -->
+                <div class="col-span-1 lg:col-span-4 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col" style="transition-delay: 0.2s;">
+                    <div class="mb-8">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Distribuição</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Formas de Pagamento</h3>
+                    </div>
+                    <div id="chart-distribuicao" role="img" aria-label="Gráfico de rosca mostrando distribuição de formas de pagamento: Pix 49,75%, Boleto 42,04%, Cartão de Crédito 5,97%, POS 2,16%, Pix Automático 0,07%" class="w-full flex-grow flex items-center justify-center min-h-[300px]"></div>
+                </div>
+
+                <!-- Gráfico de Linha: Evolução Temporal -->
+                <div class="col-span-1 lg:col-span-12 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.3s;">
+                    <div class="mb-8 flex flex-col sm:flex-row sm:items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Série Temporal</p>
+                            <h3 class="font-semibold text-xl text-b_deep_blue">Evolução das Formas de Pagamento</h3>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs font-medium text-b_grey_blue flex-wrap justify-end">
+                            <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-b_purple_pure"></div> Pix</span>
+                            <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-b_blue_pure"></div> Boleto</span>
+                            <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-b_blue_light"></div> Crédito</span>
+                            <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-b_grey_blue"></div> POS</span>
+                            <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-b_purple_light"></div> Pix Auto</span>
+                        </div>
+                    </div>
+                    <div id="chart-forma-tempo" role="img" aria-label="Gráfico de linhas com a evolução mensal das formas de pagamento de Janeiro a Março de 2026" class="w-full h-[320px]"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Seção 2: Inadimplência e Comportamento -->
+        <section id="inadimplencia" class="mb-24 scroll-mt-32">
+
+            <!-- Título com Linha + Badge de Insight -->
+            <div class="flex items-center gap-4 mb-10 reveal">
+                <h2 class="font-semibold text-2xl lg:text-3xl text-b_deep_blue tracking-tight whitespace-nowrap">Inadimplência e Comportamento</h2>
+                <div class="flex-grow h-[1px] bg-b_grey_blue/10 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 h-full bg-b_danger/40 w-full draw-line"></div>
+                </div>
+                <div class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-b_danger/10 border border-b_danger/20">
+                    <iconify-icon icon="solar:arrow-right-up-linear" class="text-b_danger text-sm"></iconify-icon>
+                    <span class="font-mono text-xs font-semibold text-b_danger">Em Aberto: 5,7% → 8,1%</span>
+                </div>
+            </div>
+
+            <!-- Linha 1: Barras Empilhadas + Donut -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+
+                <!-- Inadimplência por Mês (Barras Empilhadas) -->
+                <div class="col-span-1 lg:col-span-8 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.1s;">
+                    <div class="mb-8 flex flex-col sm:flex-row justify-between gap-4">
+                        <div>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Comportamento de Pagamento</p>
+                            <h3 class="font-semibold text-xl text-b_deep_blue">Inadimplência por Mês</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 pt-1">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-b_success"></div>
+                                <span class="text-xs text-b_grey_blue">Pagas no mês</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-b_blue_pure"></div>
+                                <span class="text-xs text-b_grey_blue">Pagas posteriormente</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 rounded-full bg-b_danger"></div>
+                                <span class="text-xs text-b_grey_blue">Em aberto</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="chart-inadimplencia" role="img" aria-label="Gráfico de barras empilhadas com inadimplência por mês: Janeiro 92,1% pagas no mês, Fevereiro 90,6% e Março 91,9%" class="w-full h-[300px]"></div>
+                </div>
+
+                <!-- Donut: Ciclo de Pagamento Acumulado -->
+                <div class="col-span-1 lg:col-span-4 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col" style="transition-delay: 0.2s;">
+                    <div class="mb-6">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Acumulado Jan–Mar/26</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Ciclo de Pagamento</h3>
+                    </div>
+                    <div id="chart-ciclo-donut" role="img" aria-label="Gráfico de rosca do ciclo de pagamento: 70,58% pago até o vencimento e 29,42% pago após o vencimento" class="w-full flex-grow flex items-center justify-center min-h-[260px]"></div>
+                </div>
+
+            </div>
+
+            <!-- Linha 2: Série Temporal + Tabela Detalhada -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                <!-- Evolução Temporal do Ciclo -->
+                <div class="col-span-1 lg:col-span-7 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col" style="transition-delay: 0.1s;">
+
+                    <!-- Cabeçalho -->
+                    <div class="mb-6">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Evolução Mensal</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Ciclo de Pagamento por Período</h3>
+                    </div>
+
+                    <!-- Mini-cards: Médias do período (Jan–Mar/26) -->
+                    <div class="grid grid-cols-3 gap-3 mb-5">
+
+                        <!-- Antes do vencimento — média 51,6% / tendência +2,7pp -->
+                        <div class="rounded-2xl p-4 bg-b_bone border border-b_purple_pure/10">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#6924E1"></div>
+                                <span class="font-mono text-[9px] uppercase tracking-wider text-b_grey_blue leading-tight">Antes do venc.</span>
+                            </div>
+                            <div class="font-mono text-2xl font-bold text-b_purple_pure leading-none">51,6%</div>
+                            <div class="flex items-center gap-1 mt-1.5">
+                                <iconify-icon icon="solar:arrow-right-up-linear" class="text-b_success text-xs"></iconify-icon>
+                                <span class="font-mono text-[10px] text-b_grey_blue/70">+2,7pp Jan→Mar</span>
+                            </div>
+                        </div>
+
+                        <!-- No vencimento — média 19,0% / tendência +5,6pp -->
+                        <div class="rounded-2xl p-4 bg-b_bone border border-b_blue_pure/10">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <div class="w-2 h-2 rounded-full flex-shrink-0 bg-b_blue_pure"></div>
+                                <span class="font-mono text-[9px] uppercase tracking-wider text-b_grey_blue leading-tight">No vencimento</span>
+                            </div>
+                            <div class="font-mono text-2xl font-bold text-b_blue_pure leading-none">19,0%</div>
+                            <div class="flex items-center gap-1 mt-1.5">
+                                <iconify-icon icon="solar:arrow-right-up-linear" class="text-b_success text-xs"></iconify-icon>
+                                <span class="font-mono text-[10px] text-b_grey_blue/70">+5,6pp Jan→Mar</span>
+                            </div>
+                        </div>
+
+                        <!-- Após o vencimento — média 29,4% / tendência -8,3pp (melhora) -->
+                        <div class="rounded-2xl p-4 bg-b_bone border border-b_danger/10">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <div class="w-2 h-2 rounded-full flex-shrink-0 bg-b_danger"></div>
+                                <span class="font-mono text-[9px] uppercase tracking-wider text-b_grey_blue leading-tight">Após o venc.</span>
+                            </div>
+                            <div class="font-mono text-2xl font-bold text-b_danger leading-none">29,4%</div>
+                            <div class="flex items-center gap-1 mt-1.5">
+                                <iconify-icon icon="solar:arrow-right-down-linear" class="text-b_success text-xs"></iconify-icon>
+                                <span class="font-mono text-[10px] text-b_grey_blue/70">-8,3pp Jan→Mar</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Gráfico: O wrapper usa flex-1 para preencher o vazio e move o chart para cima com justify-start -->
+                    <div class="w-full flex-1 min-h-0 relative flex flex-col justify-start mt-6">
+                        <div id="chart-ciclo-tempo" role="img" aria-label="Gráfico de linhas com evolução do ciclo de pagamento mensal de Janeiro a Março de 2026" class="w-full h-full max-h-[200px]"></div>
+                    </div>
+                </div>
+
+                <!-- Tabela: Ciclo Detalhado Mar/26 -->
+                <div class="col-span-1 lg:col-span-5 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.2s;">
+                    <div class="mb-6">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Último Mês — Mar/26</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Ciclo Detalhado de Pagamento</h3>
+                    </div>
+                    <div class="space-y-4">
+
+                        <!-- Antes do vencimento -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">Antes do vencimento</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">136.089</span>
+                                    <span class="font-mono text-sm font-bold text-b_purple_pure">53,05%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-1000 delay-300" style="width: 53.05%; background: #6924E1;"></div>
+                            </div>
+                        </div>
+
+                        <!-- No vencimento -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">No vencimento</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">53.459</span>
+                                    <span class="font-mono text-sm font-bold text-b_blue_pure">20,84%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: 20.84%; background: #062EED;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Até 10 dias após -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">Até 10 dias após</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">56.769</span>
+                                    <span class="font-mono text-sm font-bold text-b_ocean_blue">22,13%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: 22.13%; background: #0B1B73;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Até 20 dias após -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">Até 20 dias após</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">7.642</span>
+                                    <span class="font-mono text-sm font-bold text-b_grey_blue">2,98%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: 2.98%; background: #5561A6;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Divisor: zona de risco -->
+                        <div class="flex items-center gap-3 py-1">
+                            <div class="flex-grow h-px bg-b_danger/20"></div>
+                            <span class="font-mono text-[10px] uppercase tracking-widest text-b_danger/60">Zona de Risco</span>
+                            <div class="flex-grow h-px bg-b_danger/20"></div>
+                        </div>
+
+                        <!-- Até 30 dias após -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">Até 30 dias após</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">1.529</span>
+                                    <span class="font-mono text-sm font-bold text-b_danger">0,60%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: 0.60%; background: #F5326F;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Até 45 dias após -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">Até 45 dias após</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">495</span>
+                                    <span class="font-mono text-sm font-bold text-b_danger">0,19%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: 0.19%; background: #F5326F;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Após 45 dias -->
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1.5">
+                                <span class="text-xs text-b_deep_blue font-medium">Após 45 dias</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[11px] text-b_grey_blue">569</span>
+                                    <span class="font-mono text-sm font-bold text-b_danger">0,22%</span>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: 0.22%; background: #F5326F;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="pt-2 border-t border-b_grey_blue/10 flex justify-between items-center">
+                            <span class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/60">Total Mar/26</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-[11px] text-b_grey_blue">256.552</span>
+                                <span class="font-mono text-sm font-bold text-b_deep_blue">100%</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Seção 3: Negociações -->
+        <section id="negociacoes" class="mb-24 scroll-mt-32">
+            <!-- Título com Linha + Badge de Insight -->
+            <div class="flex items-center gap-4 mb-10 reveal">
+                <h2 class="font-semibold text-2xl lg:text-3xl text-b_deep_blue tracking-tight whitespace-nowrap">Negociações & Recuperação</h2>
+                <div class="flex-grow h-[1px] bg-b_grey_blue/10 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 h-full bg-b_purple_pure/40 w-full draw-line"></div>
+                </div>
+                <div class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-b_purple_pure/10 border border-b_purple_pure/20">
+                    <iconify-icon icon="solar:arrow-right-up-linear" class="text-b_purple_pure text-sm"></iconify-icon>
+                    <span class="font-mono text-xs font-semibold text-b_purple_pure">Crescimento: +94% Acordos</span>
+                </div>
+            </div>
+
+            <!-- Linha 1: Gráficos de Volume e Valor (Grid Assimétrico 5-7) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+                <!-- Volume de Negociações -->
+                <div class="col-span-1 lg:col-span-5 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.1s;">
+                    <div class="mb-6">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Acordos Gerados</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Volume Mensal</h3>
+                    </div>
+                    <div id="chart-negociacoes-volume" role="img" aria-label="Gráfico de barras com o volume mensal de negociações: Janeiro 4.300, Fevereiro 5.160 e Março 8.350 acordos" class="w-full h-[280px]"></div>
+                </div>
+
+                <!-- Valor Recuperado -->
+                <div class="col-span-1 lg:col-span-7 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.2s;">
+                    <div class="mb-6 flex flex-col sm:flex-row justify-between gap-4">
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Performance Financeira</p>
+                            <h3 class="font-semibold text-xl text-b_deep_blue">Valor Recuperado por Mês</h3>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-medium text-b_purple_pure bg-b_purple_light/20 px-3 py-1.5 rounded-lg border border-b_purple_pure/10 h-fit">
+                            <iconify-icon icon="solar:wallet-money-linear"></iconify-icon> Total R$ 2,2M
+                        </div>
+                    </div>
+                    <div id="chart-negociacoes-valor" role="img" aria-label="Gráfico de barras com valor recuperado por mês: Janeiro R$ 535.476, Fevereiro R$ 650.115 e Março R$ 1.033.906" class="w-full h-[280px]"></div>
+                </div>
+            </div>
+
+            <!-- Linha 2: Origem da Negociação (Gráfico de Barras Empilhadas Largo) -->
+            <div class="mb-8 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.1s;">
+                <div class="mb-6 flex flex-col sm:flex-row justify-between gap-4">
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Distribuição Mensal</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Origem da Negociação</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2 pt-1">
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full" style="background:#062EED"></div>
+                            <span class="text-xs text-b_grey_blue">Grace (Automático)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full" style="background:#6924E1"></div>
+                            <span class="text-xs text-b_grey_blue">Portal do Cliente</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full" style="background:#B6D5FF"></div>
+                            <span class="text-xs text-b_grey_blue">Regra de Notificação</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="chart-origem-negociacao" role="img" aria-label="Gráfico de barras empilhadas com a origem mensal das negociações: Grace automático, Portal do Cliente e Regra de Notificação" class="w-full h-[320px]"></div>
+            </div>
+
+            <!-- Linha 3: Tabelas Detalhadas (Grid 7-5) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Tabela 1: Agrupado por Origem -->
+                <div class="col-span-1 lg:col-span-7 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.1s;">
+                    <div class="mb-6">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Acumulado Jan–Mar/26</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Detalhamento por Origem</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-b_grey_blue/10">
+                                    <th class="py-3 px-2 font-mono text-[10px] uppercase tracking-widest text-b_grey_blue font-medium">Origem</th>
+                                    <th class="py-3 px-2 font-mono text-[10px] uppercase tracking-widest text-b_grey_blue font-medium text-right">Geradas</th>
+                                    <th class="py-3 px-2 font-mono text-[10px] uppercase tracking-widest text-b_grey_blue font-medium text-right">Pagas</th>
+                                    <th class="py-3 px-2 font-mono text-[10px] uppercase tracking-widest text-b_grey_blue font-medium text-right">% Pago</th>
+                                    <th class="py-3 px-2 font-mono text-[10px] uppercase tracking-widest text-b_grey_blue font-medium text-right">Valor Final</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <!-- Grace -->
+                                <tr class="border-b border-b_bone/50 hover:bg-b_bone/30 transition-colors">
+                                    <td class="py-6 px-2 font-medium text-b_deep_blue flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full" style="background:#062EED"></div> Grace
+                                    </td>
+                                    <td class="py-6 px-2 font-mono text-b_grey_blue text-right">12.086</td>
+                                    <td class="py-6 px-2 font-mono text-b_deep_blue font-medium text-right">7.337</td>
+                                    <td class="py-6 px-2 text-right">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-b_success/10 text-b_success">60,7%</span>
+                                    </td>
+                                    <td class="py-6 px-2 font-mono font-bold text-b_deep_blue text-right">R$ 891.546,47</td>
+                                </tr>
+                                <!-- Portal do Cliente -->
+                                <tr class="border-b border-b_bone/50 hover:bg-b_bone/30 transition-colors">
+                                    <td class="py-6 px-2 font-medium text-b_deep_blue flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full" style="background:#6924E1"></div> Portal do Cliente
+                                    </td>
+                                    <td class="py-6 px-2 font-mono text-b_grey_blue text-right">1.819</td>
+                                    <td class="py-6 px-2 font-mono text-b_deep_blue font-medium text-right">538</td>
+                                    <td class="py-6 px-2 text-right">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-b_danger/10 text-b_danger">29,6%</span>
+                                    </td>
+                                    <td class="py-6 px-2 font-mono font-bold text-b_deep_blue text-right">R$ 82.056,68</td>
+                                </tr>
+                                <!-- Regra de Notificação -->
+                                <tr class="hover:bg-b_bone/30 transition-colors">
+                                    <td class="py-6 px-2 font-medium text-b_deep_blue flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full" style="background:#B6D5FF"></div> Regra de Notificação
+                                    </td>
+                                    <td class="py-6 px-2 font-mono text-b_grey_blue text-right">1.158</td>
+                                    <td class="py-6 px-2 font-mono text-b_deep_blue font-medium text-right">475</td>
+                                    <td class="py-6 px-2 text-right">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-b_blue_light/30 text-b_ocean_blue">41,0%</span>
+                                    </td>
+                                    <td class="py-6 px-2 font-mono font-bold text-b_deep_blue text-right">R$ 60.303,78</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tabela 2: Forma de Pagamento por Origem -->
+                <div class="col-span-1 lg:col-span-5 rounded-[2rem] p-8 lg:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.2s;">
+                    <div class="mb-6">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Acumulado Jan–Mar/26</p>
+                        <h3 class="font-semibold text-xl text-b_deep_blue">Por Forma de Pagamento</h3>
+                    </div>
+                    <div class="space-y-6">
+                        <!-- Grace Breakdown -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-b_deep_blue">Grace</span>
+                            </div>
+                            <div class="flex gap-4 p-3 bg-b_bone/50 rounded-xl border border-b_grey_blue/5">
+                                <div class="flex-1">
+                                    <span class="block text-[10px] font-mono text-b_grey_blue uppercase tracking-wide mb-1">Pix (7.138)</span>
+                                    <span class="block text-sm font-mono font-bold text-b_purple_pure">R$ 865.980,85</span>
+                                </div>
+                                <div class="w-px bg-b_grey_blue/10"></div>
+                                <div class="flex-1">
+                                    <span class="block text-[10px] font-mono text-b_grey_blue uppercase tracking-wide mb-1">Cartão (199)</span>
+                                    <span class="block text-sm font-mono font-bold text-b_ocean_blue">R$ 25.565,62</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portal Breakdown -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-b_deep_blue">Portal do Cliente</span>
+                            </div>
+                            <div class="flex gap-4 p-3 bg-b_bone/50 rounded-xl border border-b_grey_blue/5">
+                                <div class="flex-1">
+                                    <span class="block text-[10px] font-mono text-b_grey_blue uppercase tracking-wide mb-1">Pix (514)</span>
+                                    <span class="block text-sm font-mono font-bold text-b_purple_pure">R$ 78.595,05</span>
+                                </div>
+                                <div class="w-px bg-b_grey_blue/10"></div>
+                                <div class="flex-1">
+                                    <span class="block text-[10px] font-mono text-b_grey_blue uppercase tracking-wide mb-1">Cartão (24)</span>
+                                    <span class="block text-sm font-mono font-bold text-b_ocean_blue">R$ 3.461,63</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Regra Breakdown -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-b_deep_blue">Regra de Notificação</span>
+                            </div>
+                            <div class="flex gap-4 p-3 bg-b_bone/50 rounded-xl border border-b_grey_blue/5">
+                                <div class="flex-1">
+                                    <span class="block text-[10px] font-mono text-b_grey_blue uppercase tracking-wide mb-1">Pix (453)</span>
+                                    <span class="block text-sm font-mono font-bold text-b_purple_pure">R$ 57.384,59</span>
+                                </div>
+                                <div class="w-px bg-b_grey_blue/10"></div>
+                                <div class="flex-1">
+                                    <span class="block text-[10px] font-mono text-b_grey_blue uppercase tracking-wide mb-1">Cartão (22)</span>
+                                    <span class="block text-sm font-mono font-bold text-b_ocean_blue">R$ 2.919,19</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SEÇÃO 4: Recorrência & Retenção
+        =========================================== -->
+        <section id="recorrencia" class="mb-24 scroll-mt-32">
+            <!-- Cabeçalho da Seção -->
+            <div class="flex items-center gap-4 mb-10 reveal">
+                <h2 class="font-semibold text-2xl lg:text-3xl text-b_deep_blue tracking-tight whitespace-nowrap">Recorrência & Eficiência</h2>
+                <div class="flex-grow h-[1px] bg-b_grey_blue/10 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 h-full bg-b_success/40 w-full draw-line"></div>
+                </div>
+                <div class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-b_success/10 border border-b_success/20">
+                    <iconify-icon icon="solar:shield-check-bold" class="text-b_success text-sm"></iconify-icon>
+                    <span class="font-mono text-xs font-semibold text-b_success">Retenção Estável: 88%</span>
+                </div>
+            </div>
+
+            <!-- Grid Principal 7 / 5 -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Esquerda: Eficiência de Cobrança (7 colunas) -->
+                <div class="lg:col-span-7 bg-white rounded-[2rem] p-8 lg:p-10 shadow-glass border border-b_grey_blue/10 flex flex-col reveal hover:border-b_grey_blue/20 hover:shadow-hover transition-all duration-500" aria-label="Eficiência de cobrança por tentativa: 1ª tentativa resolve 94.1% dos casos">
+                    <div class="mb-6 flex justify-between items-start">
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Métricas de Cobrança</p>
+                            <h3 class="font-semibold text-xl text-b_deep_blue">Eficiência por Tentativa</h3>
+                        </div>
+                    </div>
+
+                    <!-- Layout customizado: hero + progress bars -->
+                    <div class="flex flex-col flex-1 gap-5">
+
+                        <!-- Hero: 1ª Tentativa -->
+                        <div class="rounded-2xl p-5 flex items-center justify-between gap-4" style="background: linear-gradient(135deg, #40D39E 0%, #20A678 100%);">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-white/70 mb-1">1ª Tentativa</p>
+                                <div class="font-mono font-bold text-5xl text-white tracking-tighter leading-none">94,1%</div>
+                                <p class="text-xs text-white/70 mt-2">dos casos resolvidos na 1ª cobrança</p>
+                            </div>
+                            <div class="flex-shrink-0 w-16 h-16 rounded-full bg-white/15 flex items-center justify-center">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-white text-4xl"></iconify-icon>
+                            </div>
+                        </div>
+
+                        <!-- Progress bars: tentativas 2 a 5 -->
+                        <div class="flex flex-col gap-3 flex-1 justify-evenly">
+
+                            <!-- 2ª Tentativa -->
+                            <div>
+                                <div class="flex justify-between items-baseline mb-1.5">
+                                    <span class="font-mono text-xs text-b_deep_blue font-medium">2ª Tentativa</span>
+                                    <span class="font-mono text-sm font-bold text-b_blue_pure">2,2%</span>
+                                </div>
+                                <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full bg-b_blue_pure transition-all duration-1000 delay-200" style="width: 2.2%"></div>
+                                </div>
+                            </div>
+
+                            <!-- 3ª Tentativa -->
+                            <div>
+                                <div class="flex justify-between items-baseline mb-1.5">
+                                    <span class="font-mono text-xs text-b_deep_blue font-medium">3ª Tentativa</span>
+                                    <span class="font-mono text-sm font-bold text-b_grey_blue">1,3%</span>
+                                </div>
+                                <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full bg-b_grey_blue transition-all duration-1000 delay-300" style="width: 1.3%"></div>
+                                </div>
+                            </div>
+
+                            <!-- 4ª Tentativa -->
+                            <div>
+                                <div class="flex justify-between items-baseline mb-1.5">
+                                    <span class="font-mono text-xs text-b_deep_blue font-medium">4ª Tentativa</span>
+                                    <span class="font-mono text-sm font-bold text-b_grey_blue">0,8%</span>
+                                </div>
+                                <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full bg-b_grey_blue transition-all duration-1000 delay-400" style="width: 0.8%"></div>
+                                </div>
+                            </div>
+
+                            <!-- 5ª Tentativa -->
+                            <div>
+                                <div class="flex justify-between items-baseline mb-1.5">
+                                    <span class="font-mono text-xs text-b_deep_blue font-medium">5ª Tentativa</span>
+                                    <span class="font-mono text-sm font-bold text-b_grey_blue/60">0,5%</span>
+                                </div>
+                                <div class="h-1.5 bg-b_bone rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full bg-b_grey_blue/40 transition-all duration-1000 delay-500" style="width: 0.5%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Nota de contexto -->
+                            <div class="pt-2 border-t border-b_grey_blue/10 flex items-center gap-2">
+                                <iconify-icon icon="solar:info-circle-linear" class="text-b_grey_blue/50 text-sm flex-shrink-0"></iconify-icon>
+                                <p class="font-mono text-[10px] text-b_grey_blue/50 leading-relaxed">Tentativas 2–5 somam apenas 4,8% dos casos — maioria já resolvida na 1ª cobrança</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Direita: Inadimplência Recuperada e Retenção (5 colunas) -->
+                <div class="lg:col-span-5 flex flex-col gap-8 reveal">
+                    
+                    <!-- Card Superior: Inadimplência Recuperada -->
+                    <div class="bg-white rounded-[2rem] p-8 lg:p-10 shadow-glass border border-b_grey_blue/10 flex flex-col flex-1 hover:border-b_grey_blue/20 hover:shadow-hover transition-all duration-500">
+                        <div class="mb-6">
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Modelo Recorrente</p>
+                            <h3 class="font-semibold text-xl text-b_deep_blue">Inadimplência Recuperada</h3>
+                        </div>
+                        <div id="chart-recuperada-recorrencia" role="img" aria-label="Gráfico de barras com a inadimplência recuperada via recorrência: Janeiro 56%, Fevereiro 56%, Março 51%" class="-ml-2"></div>
+                    </div>
+
+                    <!-- Card Inferior: Taxa de Retenção (Super KPI) -->
+                    <div class="flex-1 rounded-[2rem] p-8 lg:p-10 text-white relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500 shadow-hover flex flex-col justify-between border border-white/20 active:scale-[0.99]" style="background: linear-gradient(135deg, #40D39E 0%, #20A678 100%);">
+                        <!-- Efeito Glass Interno -->
+                        <div class="absolute inset-0 bg-white/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <!-- Círculos Abstratos -->
+                        <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+                        <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-white/20 blur-xl pointer-events-none"></div>
+                        
+                        <div class="relative z-10 flex flex-col h-full justify-between">
+                            <div>
+                                <p class="font-mono text-xs uppercase tracking-widest text-white/60 mt-2">Taxa de Retenção • Jan/26 – Mar/26</p>
+                            </div>
+                            <div class="flex-1 flex flex-col justify-center my-6">
+                                <div class="font-semibold text-4xl lg:text-5xl xl:text-6xl tracking-tighter leading-none"><span class="counter tabular-nums drop-shadow-md" data-target="88" data-suffix="%">0%</span></div>
+                                <p class="font-mono text-xs text-white/60 mt-2 tracking-wide leading-relaxed">A base de clientes recorrentes se manteve extremamente estável nos últimos 2 meses.</p>
+                            </div>
+                            
+                            <div class="flex flex-wrap items-center gap-3">
+                                <div class="bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2">
+                                    <iconify-icon icon="solar:infinity-bold" class="text-white opacity-80"></iconify-icon>
+                                    <span class="text-xs font-medium">Modelo Recorrente</span>
+                                </div>
+                                <div class="bg-white/10 border border-white/20 px-4 py-2 rounded-full flex items-center gap-2">
+                                    <iconify-icon icon="solar:check-circle-linear" class="text-white text-sm"></iconify-icon>
+                                    <span class="text-xs font-mono font-semibold text-white">Retenção Estável</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>

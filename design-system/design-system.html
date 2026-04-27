@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quantis — Design System</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="assets/css2_3bd6495d20a0.css" rel="stylesheet"/>
+<script src="assets/resource_3fa48481346f.es"></script>
+<script src="assets/iconify-icon_e19829e7f0e8.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        q_black: '#020F5B',
+        q_graphite: '#5561A6',
+        q_acid: '#062EED',
+        q_bone: '#F0F1FA',
+        q_white: '#FFFFFF',
+      },
+      fontFamily: {
+        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+        body: ['"Inter"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      transitionTimingFunction: {
+        'swiss': 'cubic-bezier(0.16, 1, 0.3, 1)',
+      }
+    }
+  }
+}
+</script>
+<style>
+/* ── Original design tokens ─────────────────────────────── */
+.track-tighter { letter-spacing: -0.04em; }
+.track-tight   { letter-spacing: -0.02em; }
+.track-widest  { letter-spacing:  0.1em;  }
+
+.bg-noise {
+  position: fixed; inset: 0; z-index: 50;
+  pointer-events: none; opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("assets/filter_3E_3Crect_width__100_25_27e72378868f.html");
+}
+.dark-section .bg-noise { opacity: 0.08; mix-blend-mode: color-dodge; }
+
+.clip-button {
+  clip-path: polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);
+}
+
+.bg-tech-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(85,97,166,.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(85,97,166,.08) 1px, transparent 1px);
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+.grid-node { animation: pulse-node 4s infinite alternate ease-in-out; }
+@keyframes pulse-node {
+  0%   { opacity: 0.2; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.5); fill: #062EED; }
+}
+
+.marquee-container { display: flex; width: 200%; animation: marquee 30s linear infinite; }
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+.draw-line   { width:  0; transition: width  1s  cubic-bezier(0.16,1,0.3,1); }
+.draw-line.active   { width:  100%; }
+.draw-line-y { height: 0; transition: height 1.5s cubic-bezier(0.16,1,0.3,1); }
+.draw-line-y.active { height: 100%; }
+
+.dash-anim { stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 2s cubic-bezier(0.16,1,0.3,1); }
+.card:hover .dash-anim { stroke-dashoffset: 0; }
+
+.scramble:hover {
+  color: #062EED;
+  text-shadow: 2px 0 0 rgba(6,46,237,.5), -2px 0 0 rgba(2,15,91,.5);
+  animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+}
+@keyframes glitch {
+  0%   { transform: translate(0) }
+  20%  { transform: translate(-2px, 2px) }
+  40%  { transform: translate(-2px,-2px) }
+  60%  { transform: translate( 2px, 2px) }
+  80%  { transform: translate( 2px,-2px) }
+  100% { transform: translate(0) }
+}
+
+::-webkit-scrollbar       { width: 8px; }
+::-webkit-scrollbar-track { background: #F0F1FA; }
+::-webkit-scrollbar-thumb { background: #5561A6; }
+
+/* ── DS layout wrappers (structural only — no color, no font) ── */
+.ds-top-nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 2rem;
+  padding: 0 clamp(1.5rem,5vw,4rem); height: 3.5rem;
+  overflow-x: auto; white-space: nowrap;
+}
+.ds-section { padding: 5rem clamp(1.5rem,5vw,4rem); }
+.ds-section-inner { max-width: clamp(70rem,95vw,100rem); margin: 0 auto; }
+.ds-section-header { margin-bottom: 3rem; }
+
+.ds-type-row {
+  display: grid;
+  grid-template-columns: 160px 1fr auto;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid rgba(85,97,166,.15);
+}
+@media (max-width: 768px) {
+  .ds-type-row { grid-template-columns: 1fr; }
+  .ds-type-meta { display: none; }
+}
+
+.ds-swatches { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; }
+.ds-swatch   { display: flex; flex-direction: column; gap: 0.4rem; width: 148px; }
+.ds-swatch-preview { height: 80px; }
+
+.ds-states-row {
+  display: flex; flex-wrap: wrap;
+  gap: 2rem; align-items: flex-end;
+  margin-bottom: 3rem;
+}
+.ds-state-item { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.ds-motion-item { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 3rem; }
+.ds-motion-preview {
+  padding: 2rem; min-height: 100px;
+  display: flex; align-items: center;
+}
+
+.ds-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px,1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.ds-icon-item {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.75rem;
+  padding: 1.5rem 1rem; text-align: center;
+}
+
+.ds-layout-block { margin-bottom: 2.5rem; }
+</style>
+</head>
+<body class="bg-q_bone text-q_black font-body antialiased selection:bg-q_acid selection:text-q_white overflow-x-hidden">
+
+<div class="bg-noise"></div>
+
+<!-- ── TOP NAV ──────────────────────────────────────────── -->
+<nav class="ds-top-nav bg-q_bone/95 backdrop-blur-md border-b border-q_graphite/20">
+  <span class="font-display font-semibold text-sm track-tighter uppercase text-q_black mr-4">Design System</span>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-hero">Hero</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-type">Typography</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-colors">Colors</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-components">Components</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-layout">Layout</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-motion">Motion</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_graphite hover:text-q_acid transition-colors" href="#ds-icons">Icons</a>
+  <a class="font-mono text-[10px] uppercase track-widest text-q_acid hover:text-q_black transition-colors" href="#ds-recipes">Recipes ↗</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     §0 HERO — exact clone, text adapted
+══════════════════════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden" id="ds-hero">
+  <div class="absolute inset-0 bg-tech-grid opacity-50 z-0 pointer-events-none"></div>
+  <svg class="absolute inset-0 w-full h-full z-0 opacity-20 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+    <circle class="grid-node" cx="20%" cy="30%" fill="#5561A6" r="2" style="animation-delay:0s"></circle>
+    <circle class="grid-node" cx="80%" cy="40%" fill="#5561A6" r="2" style="animation-delay:1s"></circle>
+    <circle class="grid-node" cx="60%" cy="70%" fill="#5561A6" r="2" style="animation-delay:2s"></circle>
+    <circle class="grid-node" cx="30%" cy="80%" fill="#5561A6" r="2" style="animation-delay:0.5s"></circle>
+    <line stroke="#5561A6" stroke-dasharray="2 2" stroke-width="0.5" x1="20%" x2="80%" y1="30%" y2="40%"></line>
+    <line stroke="#5561A6" stroke-dasharray="2 2" stroke-width="0.5" x1="80%" x2="60%" y1="40%" y2="70%"></line>
+    <line stroke="#5561A6" stroke-dasharray="2 2" stroke-width="0.5" x1="60%" x2="30%" y1="70%" y2="80%"></line>
+    <line stroke="#5561A6" stroke-dasharray="2 2" stroke-width="0.5" x1="30%" x2="20%" y1="80%" y2="30%"></line>
+  </svg>
+  <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] w-full relative z-10 grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
+    <div class="col-span-12 lg:col-span-8 reveal active">
+      <h1 class="font-display font-semibold text-[clamp(3rem,7vw,6.5rem)] leading-[0.9] track-tighter text-q_black mb-[clamp(1.5rem,3vw,2.5rem)] uppercase">
+        Quantis<br/>Design<br/>
+        <span class="text-q_graphite">System.</span>
+      </h1>
+      <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] leading-relaxed text-q_graphite max-w-[55ch] mb-[clamp(2.5rem,5vw,4rem)]">
+        A living pattern library for the Quantis visual language — typography, colors, components, motion, and layout patterns extracted verbatim from the product.
+      </p>
+      <div class="flex flex-wrap items-center gap-6">
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm md:text-base uppercase track-widest text-q_bone bg-q_acid clip-button overflow-hidden group transition-all duration-300 hover:bg-q_black hover:-translate-y-1" href="#ds-type">
+          Explore Tokens
+        </a>
+        <a class="font-mono text-xs uppercase track-widest text-q_black border-b border-q_black pb-1 hover:text-q_acid hover:border-q_acid transition-colors duration-300" href="#ds-components">
+          View Components
+        </a>
+      </div>
+      <div class="mt-[clamp(3rem,6vw,5rem)] flex items-center gap-4 border-t border-q_graphite/20 pt-6">
+        <iconify-icon class="text-q_acid text-2xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <p class="font-mono text-xs uppercase track-widest text-q_graphite">
+          5 Color Tokens · 3 Typefaces · 8 Components · 7 Motion Patterns
+        </p>
+      </div>
+    </div>
+    <div class="hidden lg:flex col-span-4 flex-col justify-end pb-12 reveal active" style="transition-delay:0.2s">
+      <div class="border-l border-q_graphite/20 pl-8 space-y-8">
+        <div>
+          <div class="font-mono text-xs uppercase track-widest text-q_graphite mb-2">Design Tokens</div>
+          <div class="font-display font-semibold text-[clamp(2rem,3vw,3rem)] track-tighter text-q_acid flex items-baseline gap-1">
+            5 <span class="w-2 h-2 rounded-full bg-q_acid animate-pulse mb-4"></span>
+          </div>
+        </div>
+        <div>
+          <div class="font-mono text-xs uppercase track-widest text-q_graphite mb-2">System Status</div>
+          <div class="font-mono text-sm text-q_black flex items-center gap-2">
+            <iconify-icon class="text-q_acid" icon="solar:server-square-linear" stroke-width="1.5"></iconify-icon>
+            Pattern Library Active
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §1 TYPOGRAPHY
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_bone border-t border-q_graphite/20" id="ds-type">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [01_TYPOGRAPHY]
+      </div>
+    </div>
+
+    <!-- H1 hero -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Display H1</span>
+      <h1 class="font-display font-semibold text-[clamp(3rem,7vw,6.5rem)] leading-[0.9] track-tighter text-q_black uppercase">Compound Your Legacy</h1>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">clamp(3–6.5rem) / lh 0.9 · Space Grotesk SemiBold</span>
+    </div>
+
+    <!-- H2 section -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Heading 2</span>
+      <h2 class="font-display font-semibold text-[clamp(2rem,5vw,4.5rem)] leading-[1.05] track-tighter text-q_black">Engineered for Absolute Return.</h2>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">clamp(2–4.5rem) / lh 1.05 · Space Grotesk SemiBold</span>
+    </div>
+
+    <!-- H2 large body (onboarding) -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Display CTA</span>
+      <h2 class="font-display font-semibold text-[clamp(3rem,8vw,7rem)] leading-[0.9] track-tighter text-q_black uppercase">Stop Leaving <span class="text-q_acid">Alpha</span> On The Table.</h2>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">clamp(3–7rem) / lh 0.9 · q_acid accent</span>
+    </div>
+
+    <!-- H3 card title -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Heading 3</span>
+      <h3 class="font-display font-medium text-2xl text-q_black track-tight">Quantis Alpha Strategy</h3>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">24px / normal · Space Grotesk Medium</span>
+    </div>
+
+    <!-- Body -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Body Regular</span>
+      <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] leading-relaxed text-q_graphite max-w-[55ch]">Institutional-grade asset management built for uncompromising growth. We architect high-yield portfolios that weather volatility.</p>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">clamp(1–1.125rem) / relaxed · Inter Regular</span>
+    </div>
+
+    <!-- Counter / display number -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Display Number</span>
+      <div class="font-display font-medium text-[clamp(3rem,5vw,4.5rem)] track-tighter text-q_black flex items-baseline">24.8%</div>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">clamp(3–4.5rem) / normal · Space Grotesk Medium</span>
+    </div>
+
+    <!-- Mono label -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Mono Label</span>
+      <div class="font-mono text-xs uppercase track-widest text-q_graphite">[SEC.01_THESIS] · Algorithmic Deployment Active</div>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">12px / normal · JetBrains Mono · track-widest</span>
+    </div>
+
+    <!-- Mono XS -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Mono XS</span>
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite">© Quantis Asset Management LLC 2026. All rights reserved.</div>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">10px / normal · JetBrains Mono</span>
+    </div>
+
+    <!-- Scramble variant -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Scramble Text</span>
+      <h2 class="font-display font-semibold text-[clamp(1.5rem,3vw,3rem)] leading-[1.1] track-tight text-q_black">
+        The 60/40 is <span class="scramble inline-block cursor-crosshair transition-colors duration-200">Dead Weight.</span>
+      </h2>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">.scramble:hover → glitch + q_acid</span>
+    </div>
+
+    <!-- Watermark -->
+    <div class="ds-type-row">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Watermark</span>
+      <div class="overflow-hidden">
+        <h1 class="font-display font-semibold text-[clamp(4rem,10vw,10rem)] leading-none track-tighter text-q_graphite opacity-10 select-none">QUANTIS</h1>
+      </div>
+      <span class="font-mono text-[10px] text-q_graphite whitespace-nowrap">clamp(4–10rem) · opacity-5 · footer bg</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §2 COLORS & SURFACES
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_white border-t border-q_graphite/20" id="ds-colors">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [02_COLORS &amp; SURFACES]
+      </div>
+    </div>
+
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-4">Brand Color Tokens</div>
+    <div class="ds-swatches">
+      <div class="ds-swatch">
+        <div class="ds-swatch-preview" style="background:#020F5B;"></div>
+        <span class="font-mono text-[10px] text-q_graphite">#020F5B</span>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_black">q_black</span>
+        <span class="font-body text-xs text-q_graphite">Primary text · Dark surfaces</span>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch-preview" style="background:#5561A6;"></div>
+        <span class="font-mono text-[10px] text-q_graphite">#5561A6</span>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_black">q_graphite</span>
+        <span class="font-body text-xs text-q_graphite">Secondary text · Borders · Dividers</span>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch-preview" style="background:#062EED;"></div>
+        <span class="font-mono text-[10px] text-q_graphite">#062EED</span>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_black">q_acid</span>
+        <span class="font-body text-xs text-q_graphite">CTAs · Accents · Active states</span>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch-preview border border-q_graphite/20" style="background:#F0F1FA;"></div>
+        <span class="font-mono text-[10px] text-q_graphite">#F0F1FA</span>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_black">q_bone</span>
+        <span class="font-body text-xs text-q_graphite">Page background · Footer · Hero</span>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch-preview border border-q_graphite/20" style="background:#FFFFFF;"></div>
+        <span class="font-mono text-[10px] text-q_graphite">#FFFFFF</span>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_black">q_white</span>
+        <span class="font-body text-xs text-q_graphite">Cards · Dashboard · Metrics bg</span>
+      </div>
+    </div>
+
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-4">Section Backgrounds</div>
+    <div class="ds-swatches mb-12">
+      <div class="ds-swatch" style="width:200px;">
+        <div class="ds-swatch-preview bg-q_bone border border-q_graphite/20" style="display:flex;align-items:center;justify-content:center;">
+          <span class="font-mono text-[10px] text-q_graphite">bg-q_bone</span>
+        </div>
+        <span class="font-body text-xs text-q_graphite">Hero · Thesis · Onboarding · Footer</span>
+      </div>
+      <div class="ds-swatch" style="width:200px;">
+        <div class="ds-swatch-preview bg-q_white border border-q_graphite/20" style="display:flex;align-items:center;justify-content:center;">
+          <span class="font-mono text-[10px] text-q_graphite">bg-q_white</span>
+        </div>
+        <span class="font-body text-xs text-q_graphite">Infrastructure · Metrics section</span>
+      </div>
+      <div class="ds-swatch" style="width:200px;">
+        <div class="ds-swatch-preview bg-q_black" style="display:flex;align-items:center;justify-content:center;">
+          <span class="font-mono text-[10px] text-q_bone">bg-q_black</span>
+        </div>
+        <span class="font-body text-xs text-q_graphite">Dark sections · Ticker · Nav CTA</span>
+      </div>
+    </div>
+
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-4">Borders &amp; Dividers</div>
+    <div class="space-y-4 max-w-2xl mb-12">
+      <div class="flex items-center gap-6">
+        <div class="w-32 h-[1px] bg-q_graphite/20"></div>
+        <span class="font-mono text-[10px] text-q_graphite">border-q_graphite/20 — default divider</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="w-32 h-[1px] bg-q_graphite/50"></div>
+        <span class="font-mono text-[10px] text-q_graphite">border-q_graphite/50 — card inner line</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="w-32 h-[1px] bg-q_acid"></div>
+        <span class="font-mono text-[10px] text-q_graphite">bg-q_acid — draw-line accent · hover border</span>
+      </div>
+    </div>
+
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-4">Gradient Overlay</div>
+    <div class="ds-swatches">
+      <div class="ds-swatch" style="width:280px;">
+        <div class="ds-swatch-preview" style="background:linear-gradient(to bottom,transparent,#F0F1FA);height:80px;width:100%;"></div>
+        <span class="font-mono text-[10px] text-q_graphite">from-transparent → q_bone</span>
+        <span class="font-body text-xs text-q_graphite">Onboarding section fade overlay</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §3 UI COMPONENTS
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_bone border-t border-q_graphite/20" id="ds-components">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [03_UI COMPONENTS]
+      </div>
+    </div>
+
+    <!-- Button: Acid -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Button — Primary (Acid)</div>
+    <div class="ds-states-row">
+      <div class="ds-state-item">
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm uppercase track-widest text-q_bone bg-q_acid clip-button overflow-hidden group transition-all duration-300" href="#">Secure Your Allocation</a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default</span>
+      </div>
+      <div class="ds-state-item">
+        <!-- simulated: hover state -->
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm uppercase track-widest text-q_bone bg-q_black clip-button overflow-hidden -translate-y-1 transition-all duration-300" href="#">Secure Your Allocation</a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Hover</span>
+      </div>
+    </div>
+
+    <!-- Button: Dark -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Button — Dark (Black)</div>
+    <div class="ds-states-row">
+      <div class="ds-state-item">
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-xs uppercase track-widest text-q_bone bg-q_black clip-button overflow-hidden group transition-all duration-300" href="#">Initiate Strategy</a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default</span>
+      </div>
+      <div class="ds-state-item">
+        <!-- simulated: hover state -->
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-xs uppercase track-widest text-q_bone bg-q_acid clip-button overflow-hidden transition-all duration-300" href="#">Initiate Strategy</a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Hover</span>
+      </div>
+    </div>
+
+    <!-- Button: White on dark -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Button — Light (White, dark context)</div>
+    <div class="bg-q_black p-8 flex flex-wrap gap-8 items-end mb-8">
+      <div class="ds-state-item">
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm uppercase track-widest text-q_black bg-q_white clip-button overflow-hidden group transition-all duration-300" href="#">
+          <span class="relative z-10 flex items-center gap-3">Download Intelligence <iconify-icon icon="solar:download-minimalistic-linear" stroke-width="1.5"></iconify-icon></span>
+        </a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default</span>
+      </div>
+      <div class="ds-state-item">
+        <!-- simulated: hover state -->
+        <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm uppercase track-widest text-q_white bg-q_acid clip-button overflow-hidden transition-all duration-300" href="#">
+          <span class="relative z-10 flex items-center gap-3">Download Intelligence <iconify-icon icon="solar:download-minimalistic-linear" stroke-width="1.5"></iconify-icon></span>
+        </a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Hover</span>
+      </div>
+    </div>
+
+    <!-- Link text -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Link — Text with Border</div>
+    <div class="ds-states-row">
+      <div class="ds-state-item">
+        <a class="font-mono text-xs uppercase track-widest text-q_black border-b border-q_black pb-1 transition-colors duration-300" href="#">Examine Historical Yields</a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default</span>
+      </div>
+      <div class="ds-state-item">
+        <!-- simulated: hover state -->
+        <a class="font-mono text-xs uppercase track-widest text-q_acid border-b border-q_acid pb-1 transition-colors duration-300" href="#">Examine Historical Yields</a>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Hover</span>
+      </div>
+    </div>
+
+    <!-- Metric card -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Card — Metric / Stat</div>
+    <div class="ds-states-row" style="align-items:stretch;">
+      <div class="ds-state-item" style="flex:1;min-width:200px;max-width:280px;">
+        <div class="border border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] transition-all duration-500 ease-swiss group card w-full">
+          <div class="font-display font-medium text-[clamp(3rem,5vw,4.5rem)] track-tighter text-q_black mb-2 flex items-baseline">24.8%</div>
+          <div class="w-12 h-[1px] bg-q_graphite/50 mb-4"></div>
+          <div class="font-mono text-xs uppercase track-widest text-q_graphite">5-Year Annualized</div>
+        </div>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default</span>
+      </div>
+      <div class="ds-state-item" style="flex:1;min-width:200px;max-width:280px;">
+        <!-- simulated: hover state -->
+        <div class="border border-q_acid bg-q_white p-[clamp(2rem,4vw,3.5rem)] -translate-y-2 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] relative z-10 transition-all duration-500 ease-swiss group card w-full">
+          <div class="font-display font-medium text-[clamp(3rem,5vw,4.5rem)] track-tighter text-q_black mb-2 flex items-baseline">24.8%</div>
+          <div class="w-12 h-[1px] bg-q_acid mb-4"></div>
+          <div class="font-mono text-xs uppercase track-widest text-q_black">5-Year Annualized</div>
+        </div>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Hover</span>
+      </div>
+    </div>
+
+    <!-- Strategy card -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Card — Strategy</div>
+    <div class="ds-states-row" style="align-items:stretch;">
+      <div class="ds-state-item" style="flex:1;min-width:240px;max-width:380px;">
+        <div class="border border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] transition-all duration-400 ease-swiss group card w-full">
+          <div class="flex justify-between items-start mb-16">
+            <div class="font-mono text-xs uppercase track-widest text-q_graphite">01.</div>
+            <svg fill="none" height="40" viewBox="0 0 40 40" width="40">
+              <path class="dash-anim" d="M5 20H15L20 5L25 35L30 20H35" stroke="#020F5B" stroke-width="1.5"></path>
+            </svg>
+          </div>
+          <h3 class="font-display font-medium text-2xl text-q_black mb-4 track-tight">Quantis Alpha</h3>
+          <p class="font-body text-q_graphite text-sm leading-relaxed">Market-neutral algorithmic equity trading utilizing high-frequency sentiment analysis.</p>
+        </div>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default (hover to draw SVG)</span>
+      </div>
+      <div class="ds-state-item" style="flex:1;min-width:240px;max-width:380px;">
+        <!-- simulated: hover state -->
+        <div class="border border-q_acid bg-q_white p-[clamp(2rem,4vw,3.5rem)] -translate-y-2 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-400 ease-swiss group card w-full">
+          <div class="flex justify-between items-start mb-16">
+            <div class="font-mono text-xs uppercase track-widest text-q_acid">01.</div>
+            <svg fill="none" height="40" viewBox="0 0 40 40" width="40">
+              <path d="M5 20H15L20 5L25 35L30 20H35" stroke="#020F5B" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="0"></path>
+            </svg>
+          </div>
+          <h3 class="font-display font-medium text-2xl text-q_black mb-4 track-tight">Quantis Alpha</h3>
+          <p class="font-body text-q_graphite text-sm leading-relaxed">Market-neutral algorithmic equity trading utilizing high-frequency sentiment analysis.</p>
+        </div>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Hover</span>
+      </div>
+    </div>
+
+    <!-- Section marker -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Section Marker</div>
+    <div class="mb-10">
+      <div class="font-mono text-[10px] md:text-xs uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [SEC.01_THESIS]
+      </div>
+    </div>
+
+    <!-- Ticker bar -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Ticker / Marquee Bar</div>
+    <div class="w-full bg-q_black border-y border-q_graphite/30 overflow-hidden py-3 mb-10">
+      <div class="marquee-container font-mono text-xs uppercase track-widest text-q_bone">
+        <div class="flex-shrink-0 flex items-center gap-12 px-6">
+          <span>// AUM: $4.2B+</span>
+          <span>// Q3 YIELD: <span class="text-q_acid">+12.4%</span></span>
+          <span>// INSTITUTIONS TRUSTED: 148</span>
+          <span>// ACTIVE STRATEGIES: 12</span>
+          <span>// SHARPE RATIO: 2.1</span>
+          <span>// AUM: $4.2B+</span>
+          <span>// Q3 YIELD: <span class="text-q_acid">+12.4%</span></span>
+          <span>// INSTITUTIONS TRUSTED: 148</span>
+          <span>// ACTIVE STRATEGIES: 12</span>
+          <span>// SHARPE RATIO: 2.1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav bar -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Navigation Bar</div>
+    <div class="border border-q_graphite/20 mb-10">
+      <nav class="bg-q_bone/90 backdrop-blur-md border-b border-q_graphite/20">
+        <div class="px-[clamp(1.5rem,5vw,4rem)] h-20 flex items-center justify-between">
+          <a class="font-display font-semibold text-[clamp(1.25rem,2vw,1.5rem)] track-tighter uppercase flex items-center gap-2 group" href="#">
+            <svg class="text-q_black group-hover:text-q_acid transition-colors duration-300" fill="none" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M2 22L12 2L22 22H17L12 12L7 22H2Z" fill="currentColor"></path>
+            </svg>
+            Quantis
+          </a>
+          <div class="hidden md:flex items-center gap-8 font-mono text-xs uppercase track-widest text-q_graphite">
+            <a class="hover:text-q_black transition-colors" href="#">Thesis</a>
+            <a class="hover:text-q_black transition-colors" href="#">Performance</a>
+            <a class="hover:text-q_black transition-colors" href="#">Allocation</a>
+          </div>
+          <a class="hidden sm:inline-block relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-xs uppercase track-widest text-q_bone bg-q_black clip-button overflow-hidden group transition-all duration-300 hover:bg-q_acid" href="#">
+            <span class="relative z-10">Initiate Strategy</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Email input -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-5">Input — Email</div>
+    <div class="ds-states-row">
+      <div class="ds-state-item" style="min-width:280px;">
+        <form class="flex items-center border-b border-q_graphite/40 pb-2">
+          <input class="bg-transparent border-none outline-none font-mono text-xs uppercase track-widest text-q_black placeholder:text-q_graphite w-full" placeholder="ENTER EMAIL" type="email"/>
+          <button class="text-q_black" type="submit">
+            <iconify-icon class="text-xl" icon="solar:arrow-right-linear" stroke-width="1.5"></iconify-icon>
+          </button>
+        </form>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Default</span>
+      </div>
+      <div class="ds-state-item" style="min-width:280px;">
+        <!-- simulated: focus state -->
+        <form class="flex items-center border-b border-q_acid pb-2">
+          <input class="bg-transparent border-none outline-none font-mono text-xs uppercase track-widest text-q_black placeholder:text-q_graphite w-full" placeholder="USER@FUND.COM" type="email"/>
+          <button class="text-q_acid" type="submit">
+            <iconify-icon class="text-xl" icon="solar:arrow-right-linear" stroke-width="1.5"></iconify-icon>
+          </button>
+        </form>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Focus</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §4 LAYOUT & SPACING
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_white border-t border-q_graphite/20" id="ds-layout">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [04_LAYOUT &amp; SPACING]
+      </div>
+    </div>
+
+    <!-- Pattern A: 8/4 hero split -->
+    <div class="ds-layout-block">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-3">Pattern A — 12-col Split 8/4 · Hero + Live Data</div>
+      <div class="border border-q_graphite/20 p-6 bg-q_bone">
+        <div class="grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
+          <div class="col-span-12 lg:col-span-8 border border-q_graphite/20 bg-q_white p-8 flex items-center justify-center min-h-[80px]">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">8 cols · Hero title + body + CTAs + badge</span>
+          </div>
+          <div class="hidden lg:flex col-span-4 border border-q_graphite/20 bg-q_white p-8 items-center justify-center">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">4 cols · Live data panel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern B: 4/8 thesis split -->
+    <div class="ds-layout-block">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-3">Pattern B — 12-col Split 4/8 · Section Marker / Content (Thesis)</div>
+      <div class="border border-q_graphite/20 p-6 bg-q_bone relative">
+        <!-- Vertical line accent -->
+        <div class="absolute left-6 top-0 bottom-0 w-[1px] bg-q_graphite/20 hidden lg:block">
+          <div class="w-full bg-q_acid draw-line-y active" style="height:100%"></div>
+        </div>
+        <div class="grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)]">
+          <div class="col-span-12 lg:col-span-4 border border-q_graphite/20 bg-q_white p-8 flex items-center justify-center lg:pl-12 min-h-[80px]">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">4 cols · [SEC.XX] marker + vertical line</span>
+          </div>
+          <div class="col-span-12 lg:col-span-8 border border-q_graphite/20 bg-q_white p-8 flex items-center justify-center">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">8 cols · Heading + draw-line + body copy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern C: 3-col metric grid flush borders -->
+    <div class="ds-layout-block">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-3">Pattern C — 3-col Metric Grid · Flush border (border-t border-l)</div>
+      <div class="border border-q_graphite/20 p-6 bg-q_bone">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-l border-q_graphite/20">
+          <div class="border-b border-r border-q_graphite/20 bg-q_white p-8 flex items-center justify-center">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Metric 01</span>
+          </div>
+          <div class="border-b border-r border-q_graphite/20 bg-q_white p-8 flex items-center justify-center">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Metric 02</span>
+          </div>
+          <div class="border-b border-r border-q_graphite/20 bg-q_white p-8 flex items-center justify-center">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Metric 03</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern D: 2-col strategy grid with gap -->
+    <div class="ds-layout-block">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-3">Pattern D — 2-col Strategy Grid · gap-[clamp(1.5rem,3vw,2.5rem)]</div>
+      <div class="border border-q_graphite/20 p-6 bg-q_bone">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-[clamp(1.5rem,3vw,2.5rem)]">
+          <div class="border border-q_graphite/20 bg-q_white p-8 flex items-center justify-center min-h-[80px]">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Strategy Card</span>
+          </div>
+          <div class="border border-q_graphite/20 bg-q_white p-8 flex items-center justify-center min-h-[80px]">
+            <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">Strategy Card</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Container rule -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-3">Container &amp; Padding Rule</div>
+    <div class="border border-q_graphite/20 p-6 bg-q_bone font-mono text-[10px] text-q_graphite space-y-2">
+      <div>max-width: <span class="text-q_black">clamp(70rem, 95vw, 100rem)</span> · centered with mx-auto</div>
+      <div>horizontal padding: <span class="text-q_black">px-[clamp(1.5rem,5vw,4rem)]</span></div>
+      <div>section vertical padding: <span class="text-q_black">py-[clamp(5rem,10vw,10rem)]</span></div>
+      <div>column gap: <span class="text-q_black">gap-[clamp(1.5rem,3vw,2.5rem)]</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §5 MOTION & INTERACTION
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_bone border-t border-q_graphite/20" id="ds-motion">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [05_MOTION &amp; INTERACTION]
+      </div>
+    </div>
+
+    <!-- reveal -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">reveal — opacity:0→1 + translateY(30px)→0 · 0.8s ease-swiss</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full">
+        <div class="reveal active w-full" id="anim-reveal">
+          <div class="bg-q_white border border-q_graphite/20 p-8">
+            <h3 class="font-display font-medium text-2xl text-q_black track-tight">Reveal Element</h3>
+            <p class="font-mono text-[10px] uppercase track-widest text-q_graphite mt-2">opacity 0→1 · translateY(30px)→0</p>
+          </div>
+        </div>
+      </div>
+      <button class="self-start font-mono text-[10px] uppercase track-widest text-q_acid border border-q_acid px-4 py-2 hover:bg-q_acid hover:text-q_bone transition-colors" onclick="replayReveal()">↺ Replay</button>
+    </div>
+
+    <!-- draw-line -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">draw-line — width:0→100% · 1s ease-swiss</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full flex flex-col gap-4">
+        <div class="w-full h-[1px] bg-q_graphite/20">
+          <div class="draw-line active h-full bg-q_graphite" id="dl1" style="width:100%"></div>
+        </div>
+        <div class="w-full h-[1px] bg-q_acid/20">
+          <div class="draw-line active h-full bg-q_acid" id="dl2" style="width:100%"></div>
+        </div>
+      </div>
+      <button class="self-start font-mono text-[10px] uppercase track-widest text-q_acid border border-q_acid px-4 py-2 hover:bg-q_acid hover:text-q_bone transition-colors" onclick="replayDrawLine('dl1');replayDrawLine('dl2')">↺ Replay</button>
+    </div>
+
+    <!-- draw-line-y -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">draw-line-y — height:0→100% · 1.5s ease-swiss · vertical accent</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full" style="height:140px;position:relative;overflow:hidden;">
+        <div class="absolute left-10 top-0 bottom-0 w-[1px] bg-q_graphite/20">
+          <div class="draw-line-y active w-full bg-q_acid" id="dly1" style="height:100%"></div>
+        </div>
+        <p class="font-mono text-[10px] uppercase track-widest text-q_graphite pl-16 pt-6">Used in Thesis section — left column vertical line</p>
+      </div>
+      <button class="self-start font-mono text-[10px] uppercase track-widest text-q_acid border border-q_acid px-4 py-2 hover:bg-q_acid hover:text-q_bone transition-colors" onclick="replayDrawLineY('dly1')">↺ Replay</button>
+    </div>
+
+    <!-- pulse-node -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">pulse-node — opacity 0.2→0.8 + scale 1→1.5 + fill→q_acid · 4s alternate ease-in-out infinite</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full" style="height:100px;">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <circle class="grid-node" cx="20%" cy="50%" fill="#5561A6" r="5" style="animation-delay:0s"></circle>
+          <circle class="grid-node" cx="50%" cy="50%" fill="#5561A6" r="5" style="animation-delay:1s"></circle>
+          <circle class="grid-node" cx="80%" cy="50%" fill="#5561A6" r="5" style="animation-delay:2s"></circle>
+          <line stroke="#5561A6" stroke-dasharray="3 3" stroke-width="0.5" x1="20%" x2="80%" y1="50%" y2="50%"></line>
+        </svg>
+      </div>
+    </div>
+
+    <!-- marquee -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">marquee — translateX(0)→translateX(-50%) · 30s linear infinite</span>
+      <div class="ds-motion-preview p-0 overflow-hidden w-full border border-q_graphite/20">
+        <div class="w-full bg-q_black py-3 overflow-hidden">
+          <div class="marquee-container font-mono text-xs uppercase track-widest text-q_bone">
+            <div class="flex-shrink-0 flex items-center gap-12 px-6">
+              <span>// MARQUEE ANIMATION</span><span>// 30s LINEAR</span><span>// INFINITE LOOP</span><span>// DUPLICATED CONTENT</span>
+              <span>// MARQUEE ANIMATION</span><span>// 30s LINEAR</span><span>// INFINITE LOOP</span><span>// DUPLICATED CONTENT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- dash-anim -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">dash-anim — stroke-dashoffset:1000→0 · 2s ease-swiss · triggered by .card:hover</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full">
+        <div class="border border-q_graphite/20 p-8 group card inline-flex items-center gap-12 w-full hover:border-q_acid hover:-translate-y-1 transition-all duration-400 ease-swiss">
+          <p class="font-mono text-[10px] uppercase track-widest text-q_graphite">← Hover to draw</p>
+          <svg fill="none" height="40" viewBox="0 0 40 40" width="40">
+            <path class="dash-anim" d="M5 20H15L20 5L25 35L30 20H35" stroke="#020F5B" stroke-width="1.5"></path>
+          </svg>
+          <svg fill="none" height="40" viewBox="0 0 40 40" width="40">
+            <circle class="dash-anim" cx="20" cy="20" r="15" stroke="#020F5B" stroke-dasharray="4 4" stroke-width="1.5"></circle>
+          </svg>
+          <svg fill="none" height="40" viewBox="0 0 40 40" width="40">
+            <path class="dash-anim" d="M5 35L35 5M35 5H15M35 5V25" stroke="#020F5B" stroke-linejoin="bevel" stroke-width="1.5"></path>
+          </svg>
+          <svg fill="none" height="40" viewBox="0 0 40 40" width="40">
+            <rect class="dash-anim" height="20" stroke="#020F5B" stroke-width="1.5" width="10" x="5" y="15"></rect>
+            <rect class="dash-anim" height="30" stroke="#020F5B" stroke-width="1.5" width="10" x="25" y="5"></rect>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- glitch / scramble -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">glitch — transform zig-zag · 0.3s infinite · .scramble:hover · color→q_acid + text-shadow</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full flex flex-col gap-3">
+        <h2 class="font-display font-semibold text-[clamp(1.5rem,3vw,2.5rem)] leading-[1.1] track-tight text-q_black">
+          Portfolio is <span class="scramble inline-block cursor-crosshair transition-colors duration-200">Dead Weight.</span>
+        </h2>
+        <p class="font-mono text-[10px] uppercase track-widest text-q_graphite">← Hover underlined word</p>
+      </div>
+    </div>
+
+    <!-- card hover lift -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">card hover — translateY(-8px) + box-shadow + border→q_acid · 500ms ease-swiss</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full">
+        <div class="border border-q_graphite/20 bg-q_white p-8 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-q_acid transition-all duration-500 ease-swiss group card">
+          <div class="font-mono text-[10px] uppercase track-widest text-q_graphite group-hover:text-q_black transition-colors">Hover this card</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotlight hover (infrastructure section) -->
+    <div class="ds-motion-item">
+      <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">spotlight glow — radial bg-q_bone/50 blur-[100px] · opacity:0→1 on group-hover · 700ms</span>
+      <div class="ds-motion-preview border border-q_graphite/20 bg-q_white w-full relative group overflow-hidden" style="min-height:120px;">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-q_bone/50 rounded-full blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0"></div>
+        <p class="relative z-10 font-mono text-[10px] uppercase track-widest text-q_graphite">Hover this preview area to see the glow</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §6 ICONS
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_white border-t border-q_graphite/20" id="ds-icons">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [06_ICONS — Iconify · Solar Linear]
+      </div>
+    </div>
+
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-6">Solar · linear style · default stroke-width: 1.5</div>
+
+    <div class="ds-icon-grid">
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_black text-2xl" icon="solar:hamburger-menu-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">hamburger-menu-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">Nav mobile</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_acid text-2xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">shield-check-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">Trust badge</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_acid text-2xl" icon="solar:server-square-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">server-square-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">System status</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_acid text-2xl" icon="solar:programming-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">programming-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">Proprietary interface</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_graphite text-4xl" icon="solar:chart-square-linear" stroke-width="1"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">chart-square-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">Strategies header · sw:1</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_black text-2xl" icon="solar:download-minimalistic-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">download-minimalistic-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">CTA button</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_black text-xl" icon="solar:arrow-right-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">arrow-right-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">Email submit</span>
+      </div>
+      <div class="ds-icon-item border border-q_graphite/20 bg-q_bone">
+        <iconify-icon class="text-q_graphite text-xl" icon="solar:info-circle-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite" style="word-break:break-all;">info-circle-linear</span>
+        <span class="font-mono text-[10px] text-q_graphite">Legal notice</span>
+      </div>
+    </div>
+
+    <!-- Color variants -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-4">Color Inheritance</div>
+    <div class="flex flex-wrap items-center gap-8 mb-12">
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_black text-3xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">text-q_black</span>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_acid text-3xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">text-q_acid</span>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_graphite text-3xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">text-q_graphite</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 bg-q_black p-4">
+        <iconify-icon class="text-q_white text-3xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] uppercase track-widest text-q_graphite">text-q_white</span>
+      </div>
+    </div>
+
+    <!-- Size variants -->
+    <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-4">Size Variants</div>
+    <div class="flex flex-wrap items-end gap-8">
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_acid" icon="solar:shield-check-linear" stroke-width="1.5" style="font-size:1rem;"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite">1rem</span>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_acid text-xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite">text-xl</span>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_acid text-2xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite">text-2xl</span>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <iconify-icon class="text-q_acid text-4xl" icon="solar:shield-check-linear" stroke-width="1"></iconify-icon>
+        <span class="font-mono text-[10px] text-q_graphite">text-4xl sw:1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     §7 ATMOSPHERE RECIPES
+══════════════════════════════════════════════════════════ -->
+<section class="ds-section bg-q_bone border-t border-q_graphite/20" id="ds-recipes">
+  <div class="ds-section-inner">
+    <div class="ds-section-header">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+        [07_ATMOSPHERE RECIPES]
+      </div>
+      <p class="font-body text-sm text-q_graphite max-w-[55ch] mt-4">Combinações prontas que produzem a atmosfera do produto. Cada recipe é um bloco estrutural completo — copie, substitua o conteúdo, preserve as classes.</p>
+    </div>
+
+    <!-- ── Recipe A: Seção padrão clara ───────────────────── -->
+    <div class="mb-16">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-2">Recipe A — Seção Padrão Clara</div>
+      <p class="font-body text-xs text-q_graphite mb-6">bg-q_bone · section marker [SEC.XX] · H2 display · body graphite · draw-line horizontal. Padrão de 80% das seções de conteúdo.</p>
+      <div class="border border-q_graphite/20">
+        <section class="py-[clamp(5rem,10vw,10rem)] relative bg-q_bone">
+          <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)] relative">
+            <div class="col-span-12 lg:col-span-4 lg:pl-12">
+              <div class="font-mono text-[10px] md:text-xs uppercase track-widest text-q_graphite mb-6 flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+                [SEC.XX_NOME]
+              </div>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+              <h2 class="font-display font-semibold text-[clamp(2rem,5vw,4rem)] leading-[1.1] track-tight text-q_black mb-[clamp(1.5rem,3vw,2.5rem)] max-w-[20ch]">
+                Título da Seção Aqui.
+              </h2>
+              <div class="w-full h-[1px] bg-q_graphite/20 mb-[clamp(1.5rem,3vw,2.5rem)]">
+                <div class="h-full bg-q_graphite draw-line active" style="width:100%"></div>
+              </div>
+              <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] leading-relaxed text-q_graphite max-w-[55ch]">
+                Corpo do texto da seção. Use Inter Regular, cor q_graphite, max-width 55ch para legibilidade ideal. Este é o padrão de densidade visual que o produto usa.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── Recipe B: Seção dark de autoridade ────────────── -->
+    <div class="mb-16">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-2">Recipe B — Seção Dark de Autoridade</div>
+      <p class="font-body text-xs text-q_graphite mb-6">bg-q_black · noise overlay · conteúdo centralizado · H2 branco · p graphite · clip-button white. Usada para CTAs de alto impacto e seções de destaque.</p>
+      <div class="border border-q_graphite/20">
+        <section class="py-[clamp(5rem,10vw,10rem)] bg-q_black text-q_white relative overflow-hidden dark-section">
+          <div class="bg-noise absolute inset-0"></div>
+          <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] relative z-10 grid grid-cols-12">
+            <div class="col-span-12 lg:col-span-8 lg:col-start-3 text-center flex flex-col items-center">
+              <div class="font-mono text-[10px] md:text-xs uppercase track-widest text-q_graphite mb-8 flex items-center justify-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_white after:content-[''] after:w-8 after:h-[1px] after:bg-q_white">
+                Categoria / Rótulo
+              </div>
+              <h2 class="font-display font-semibold text-[clamp(2rem,5vw,4.5rem)] leading-[1.05] track-tighter mb-6">
+                Título de Alto Impacto Aqui.
+              </h2>
+              <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] text-q_graphite max-w-[55ch] mb-12">
+                Subtítulo ou descrição de suporte. Fundo escuro reservado para momentos de conversão ou declarações de autoridade da marca.
+              </p>
+              <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm uppercase track-widest text-q_black bg-q_white clip-button overflow-hidden group transition-all duration-300 hover:bg-q_acid hover:text-q_white" href="#">
+                <span class="relative z-10 flex items-center gap-3">
+                  Texto do CTA
+                  <iconify-icon icon="solar:arrow-right-linear" stroke-width="1.5"></iconify-icon>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── Recipe C: Grid de métricas/dados ──────────────── -->
+    <div class="mb-16">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-2">Recipe C — Grid de Métricas / Dados</div>
+      <p class="font-body text-xs text-q_graphite mb-6">bg-q_white · border flush (border-t border-l) · cards com display number + mono label + hover acid. Para qualquer conteúdo que precise de peso visual — números, stats, features.</p>
+      <div class="border border-q_graphite/20">
+        <section class="py-[clamp(5rem,10vw,10rem)] bg-q_bone">
+          <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)]">
+            <div class="mb-[clamp(3rem,6vw,6rem)]">
+              <div class="font-mono text-[10px] md:text-xs uppercase track-widest text-q_graphite mb-6 flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+                [SEC.XX_DADOS]
+              </div>
+              <h2 class="font-display font-semibold text-[clamp(2rem,4vw,3.5rem)] leading-[1.1] track-tight text-q_black mb-4">
+                Números que Falam por Si.
+              </h2>
+              <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] text-q_graphite">Subtítulo de suporte ao grid de dados abaixo.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-l border-q_graphite/20">
+              <div class="border-b border-r border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-q_acid hover:relative hover:z-10 transition-all duration-500 ease-swiss group card">
+                <div class="font-display font-medium text-[clamp(3rem,5vw,4.5rem)] track-tighter text-q_black mb-2">00.0%</div>
+                <div class="w-12 h-[1px] bg-q_graphite/50 mb-4 group-hover:bg-q_acid transition-colors duration-300"></div>
+                <div class="font-mono text-xs uppercase track-widest text-q_graphite group-hover:text-q_black transition-colors duration-300">Label da Métrica</div>
+              </div>
+              <div class="border-b border-r border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-q_acid hover:relative hover:z-10 transition-all duration-500 ease-swiss group card">
+                <div class="font-display font-medium text-[clamp(3rem,5vw,4.5rem)] track-tighter text-q_black mb-2">$000M</div>
+                <div class="w-12 h-[1px] bg-q_graphite/50 mb-4 group-hover:bg-q_acid transition-colors duration-300"></div>
+                <div class="font-mono text-xs uppercase track-widest text-q_graphite group-hover:text-q_black transition-colors duration-300">Label da Métrica</div>
+              </div>
+              <div class="border-b border-r border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-q_acid hover:relative hover:z-10 transition-all duration-500 ease-swiss group card">
+                <div class="font-display font-medium text-[clamp(3rem,5vw,4.5rem)] track-tighter text-q_black mb-2">000+</div>
+                <div class="w-12 h-[1px] bg-q_graphite/50 mb-4 group-hover:bg-q_acid transition-colors duration-300"></div>
+                <div class="font-mono text-xs uppercase track-widest text-q_graphite group-hover:text-q_black transition-colors duration-300">Label da Métrica</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── Recipe D: Grid de cards de conteúdo ───────────── -->
+    <div class="mb-16">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-2">Recipe D — Grid de Cards de Conteúdo</div>
+      <p class="font-body text-xs text-q_graphite mb-6">bg-q_white · border · hover lift + acid · número sequencial + H3 display + body. Para features, serviços, produtos, categorias — qualquer conteúdo em grade.</p>
+      <div class="border border-q_graphite/20">
+        <section class="py-[clamp(5rem,10vw,10rem)] bg-q_bone">
+          <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)]">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-[clamp(3rem,6vw,6rem)]">
+              <div>
+                <div class="font-mono text-[10px] md:text-xs uppercase track-widest text-q_graphite mb-6 flex items-center gap-4 before:content-[''] before:w-8 before:h-[1px] before:bg-q_acid">
+                  [SEC.XX_CARDS]
+                </div>
+                <h2 class="font-display font-semibold text-[clamp(2rem,4vw,3.5rem)] leading-[1.1] track-tight text-q_black mb-4">Título da Grade de Cards.</h2>
+                <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] text-q_graphite max-w-[50ch]">Subtítulo de suporte. Descreva o conjunto de cards em uma frase.</p>
+              </div>
+              <iconify-icon class="text-4xl text-q_graphite/50" icon="solar:chart-square-linear" stroke-width="1"></iconify-icon>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-[clamp(1.5rem,3vw,2.5rem)]">
+              <div class="border border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-q_acid transition-all duration-400 ease-swiss group card">
+                <div class="flex justify-between items-start mb-16">
+                  <div class="font-mono text-xs uppercase track-widest text-q_graphite group-hover:text-q_acid transition-colors">01.</div>
+                </div>
+                <h3 class="font-display font-medium text-2xl text-q_black mb-4 track-tight">Título do Card</h3>
+                <p class="font-body text-q_graphite text-sm leading-relaxed">Descrição do item. Use Inter Regular, cor q_graphite. Uma ou duas frases são suficientes.</p>
+              </div>
+              <div class="border border-q_graphite/20 bg-q_white p-[clamp(2rem,4vw,3.5rem)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-q_acid transition-all duration-400 ease-swiss group card" style="transition-delay:0.1s">
+                <div class="flex justify-between items-start mb-16">
+                  <div class="font-mono text-xs uppercase track-widest text-q_graphite group-hover:text-q_acid transition-colors">02.</div>
+                </div>
+                <h3 class="font-display font-medium text-2xl text-q_black mb-4 track-tight">Título do Card</h3>
+                <p class="font-body text-q_graphite text-sm leading-relaxed">Descrição do item. Use Inter Regular, cor q_graphite. Uma ou duas frases são suficientes.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── Recipe E: CTA final com fundo técnico ─────────── -->
+    <div class="mb-16">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-2">Recipe E — CTA Final com Fundo Técnico</div>
+      <p class="font-body text-xs text-q_graphite mb-6">bg-tech-grid + gradient overlay · display H2 gigante · CTA centralizado. O padrão de fechamento de página — máxima urgência visual.</p>
+      <div class="border border-q_graphite/20">
+        <section class="py-[clamp(8rem,15vw,15rem)] relative overflow-hidden bg-q_bone">
+          <div class="absolute inset-0 bg-tech-grid opacity-70 z-0 pointer-events-none" style="background-size:20px 20px;"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent via-q_bone/50 to-q_bone z-0"></div>
+          <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] relative z-10 text-center flex flex-col items-center">
+            <h2 class="font-display font-semibold text-[clamp(3rem,8vw,7rem)] leading-[0.9] track-tighter text-q_black mb-6 uppercase">
+              Chamada Para<br/><span class="text-q_acid">Ação</span> Aqui.
+            </h2>
+            <p class="font-body text-[clamp(1rem,1.2vw,1.25rem)] text-q_graphite max-w-[50ch] mb-10">
+              Subtítulo de suporte ao CTA. Uma frase que reforce a urgência ou o benefício principal.
+            </p>
+            <a class="relative px-[clamp(2rem,4vw,3rem)] py-[clamp(1rem,2vw,1.5rem)] font-mono font-semibold text-sm md:text-lg uppercase track-widest text-q_bone bg-q_black clip-button overflow-hidden group transition-all duration-300 hover:bg-q_acid hover:scale-105 active:scale-95 shadow-2xl shadow-q_acid/20" href="#">
+              <span class="relative z-10">Texto do Botão Principal</span>
+            </a>
+            <div class="mt-8 font-mono text-[10px] uppercase track-widest text-q_graphite flex items-center gap-2">
+              <iconify-icon icon="solar:info-circle-linear" stroke-width="1.5"></iconify-icon>
+              Nota legal ou informação de suporte ao CTA.
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── Recipe F: Hero com painel lateral de dados ─────── -->
+    <div class="mb-4">
+      <div class="font-mono text-[10px] uppercase track-widest text-q_graphite mb-2">Recipe F — Hero com Painel Lateral de Dados</div>
+      <p class="font-body text-xs text-q_graphite mb-6">bg-tech-grid + grid-nodes SVG · split 8/4 · H1 display uppercase · painel de dados à direita. Para páginas que precisam de credibilidade imediata com dado ao vivo.</p>
+      <div class="border border-q_graphite/20">
+        <section class="relative min-h-[60vh] flex items-center pt-20 overflow-hidden bg-q_bone">
+          <div class="absolute inset-0 bg-tech-grid opacity-50 z-0 pointer-events-none"></div>
+          <svg class="absolute inset-0 w-full h-full z-0 opacity-20 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="grid-node" cx="20%" cy="30%" fill="#5561A6" r="2" style="animation-delay:0s"></circle>
+            <circle class="grid-node" cx="80%" cy="40%" fill="#5561A6" r="2" style="animation-delay:1s"></circle>
+            <circle class="grid-node" cx="60%" cy="70%" fill="#5561A6" r="2" style="animation-delay:2s"></circle>
+            <line stroke="#5561A6" stroke-dasharray="2 2" stroke-width="0.5" x1="20%" x2="80%" y1="30%" y2="40%"></line>
+            <line stroke="#5561A6" stroke-dasharray="2 2" stroke-width="0.5" x1="80%" x2="60%" y1="40%" y2="70%"></line>
+          </svg>
+          <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] w-full relative z-10 grid grid-cols-12 gap-[clamp(1.5rem,3vw,2.5rem)] py-20">
+            <div class="col-span-12 lg:col-span-8">
+              <h1 class="font-display font-semibold text-[clamp(3rem,7vw,6.5rem)] leading-[0.9] track-tighter text-q_black mb-[clamp(1.5rem,3vw,2.5rem)] uppercase">
+                Título Principal<br/>da Página.<br/>
+                <span class="text-q_graphite">Subtítulo aqui.</span>
+              </h1>
+              <p class="font-body text-[clamp(1rem,1.2vw,1.125rem)] leading-relaxed text-q_graphite max-w-[55ch] mb-[clamp(2.5rem,5vw,4rem)]">
+                Descrição principal da proposta de valor. Uma ou duas frases que estabelecem o contexto e motivam a ação.
+              </p>
+              <div class="flex flex-wrap items-center gap-6">
+                <a class="relative px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] font-mono font-medium text-sm uppercase track-widest text-q_bone bg-q_acid clip-button overflow-hidden transition-all duration-300 hover:bg-q_black hover:-translate-y-1" href="#">CTA Principal</a>
+                <a class="font-mono text-xs uppercase track-widest text-q_black border-b border-q_black pb-1 hover:text-q_acid hover:border-q_acid transition-colors duration-300" href="#">Link Secundário</a>
+              </div>
+              <div class="mt-[clamp(3rem,6vw,5rem)] flex items-center gap-4 border-t border-q_graphite/20 pt-6">
+                <iconify-icon class="text-q_acid text-2xl" icon="solar:shield-check-linear" stroke-width="1.5"></iconify-icon>
+                <p class="font-mono text-xs uppercase track-widest text-q_graphite">Nota de credibilidade · Dado de confiança · Certificação.</p>
+              </div>
+            </div>
+            <div class="hidden lg:flex col-span-4 flex-col justify-end pb-12">
+              <div class="border-l border-q_graphite/20 pl-8 space-y-8">
+                <div>
+                  <div class="font-mono text-xs uppercase track-widest text-q_graphite mb-2">Label do Dado</div>
+                  <div class="font-display font-semibold text-[clamp(2rem,3vw,3rem)] track-tighter text-q_acid flex items-baseline gap-1">
+                    00.0% <span class="w-2 h-2 rounded-full bg-q_acid animate-pulse mb-4"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="font-mono text-xs uppercase track-widest text-q_graphite mb-2">Status</div>
+                  <div class="font-mono text-sm text-q_black flex items-center gap-2">
+                    <iconify-icon class="text-q_acid" icon="solar:server-square-linear" stroke-width="1.5"></iconify-icon>
+                    Status do Sistema Aqui
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER (verbatim) -->
+<footer class="border-t border-q_graphite/20 bg-q_bone pt-20 relative overflow-hidden">
+  <div class="max-w-[clamp(70rem,95vw,100rem)] mx-auto px-[clamp(1.5rem,5vw,4rem)] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-32 relative z-10">
+    <div class="space-y-6">
+      <a class="font-display font-semibold text-2xl track-tighter uppercase flex items-center gap-2" href="#">
+        <svg class="text-q_black" fill="none" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M2 22L12 2L22 22H17L12 12L7 22H2Z" fill="currentColor"></path>
+        </svg>
+        Quantis
+      </a>
+      <p class="font-mono text-xs uppercase track-widest text-q_graphite max-w-[200px]">Design System · Pattern Library.</p>
+    </div>
+    <div>
+      <h4 class="font-mono text-xs uppercase track-widest text-q_black mb-6">Sections</h4>
+      <ul class="space-y-4 font-body text-sm text-q_graphite">
+        <li><a class="hover:text-q_acid transition-colors" href="#ds-type">Typography</a></li>
+        <li><a class="hover:text-q_acid transition-colors" href="#ds-colors">Colors</a></li>
+        <li><a class="hover:text-q_acid transition-colors" href="#ds-components">Components</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-mono text-xs uppercase track-widest text-q_black mb-6">System</h4>
+      <ul class="space-y-4 font-body text-sm text-q_graphite">
+        <li><a class="hover:text-q_acid transition-colors" href="#ds-layout">Layout</a></li>
+        <li><a class="hover:text-q_acid transition-colors" href="#ds-motion">Motion</a></li>
+        <li><a class="hover:text-q_acid transition-colors" href="#ds-icons">Icons</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-mono text-xs uppercase track-widest text-q_black mb-6">Intelligence</h4>
+      <p class="font-body text-sm text-q_graphite mb-4">Subscribe to our Weekly Macro Thesis.</p>
+      <form class="flex items-center border-b border-q_graphite/40 pb-2 group focus-within:border-q_acid transition-colors">
+        <input class="bg-transparent border-none outline-none font-mono text-xs uppercase track-widest text-q_black placeholder:text-q_graphite w-full" placeholder="ENTER EMAIL" required="" type="email"/>
+        <button class="text-q_black group-hover:text-q_acid transition-colors" type="submit">
+          <iconify-icon class="text-xl" icon="solar:arrow-right-linear" stroke-width="1.5"></iconify-icon>
+        </button>
+      </form>
+      <div class="mt-12 space-y-2 font-mono text-[10px] uppercase track-widest text-q_graphite">
+        <a class="block hover:text-q_black" href="#">Form ADV</a>
+        <a class="block hover:text-q_black" href="#">Privacy</a>
+        <a class="block hover:text-q_black" href="#">Disclosures</a>
+      </div>
+    </div>
+  </div>
+  <div class="relative z-10 border-t border-q_graphite/10 py-6 text-center font-mono text-[10px] uppercase track-widest text-q_graphite">
+    Quantis Design System · Pattern Library v1.0
+  </div>
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/4 w-full text-center overflow-hidden pointer-events-none z-0">
+    <h1 class="font-display font-semibold text-[clamp(10rem,25vw,30rem)] leading-none track-tighter text-q_graphite opacity-5 select-none m-0 p-0">QUANTIS</h1>
+  </div>
+</footer>
+
+<script>
+function replayReveal() {
+  const el = document.getElementById('anim-reveal');
+  el.classList.remove('active');
+  void el.offsetWidth;
+  el.classList.add('active');
+}
+function replayDrawLine(id) {
+  const el = document.getElementById(id);
+  el.style.transition = 'none';
+  el.style.width = '0';
+  void el.offsetWidth;
+  el.style.transition = '';
+  el.style.width = '100%';
+}
+function replayDrawLineY(id) {
+  const el = document.getElementById(id);
+  el.style.transition = 'none';
+  el.style.height = '0';
+  void el.offsetWidth;
+  el.style.transition = '';
+  el.style.height = '100%';
+}
+</script>
+</body>
+</html>
