@@ -858,10 +858,102 @@ document.addEventListener('DOMContentLoaded', function () {
         observer.observe(el);
     });
 
-    // --- 5. Efeito Glassmorphism Dinâmico no Menu ---
+    // --- Hero Carousel ---
+    const heroCarousel = document.getElementById('hero-carousel');
+    const heroSlides = document.getElementById('hero-slides');
+    const heroDots = document.querySelectorAll('.hero-dot');
+    const heroSlideCount = heroDots.length;
+    let heroCurrentSlide = 0;
+    let heroAutoplay;
+    let dragStartX = 0;
+    let dragDeltaX = 0;
+    let isDragging = false;
+
+    function goToSlide(index) {
+        heroCurrentSlide = Math.max(0, Math.min(index, heroSlideCount - 1));
+        heroSlides.style.transition = 'transform 0.5s cubic-bezier(0.76,0,0.24,1)';
+        heroSlides.style.transform = `translateX(-${heroCurrentSlide * 100}%)`;
+        heroDots.forEach((dot, i) => {
+            dot.classList.toggle('w-6', i === heroCurrentSlide);
+            dot.classList.toggle('bg-white', i === heroCurrentSlide);
+            dot.classList.toggle('w-2', i !== heroCurrentSlide);
+            dot.classList.toggle('bg-white/30', i !== heroCurrentSlide);
+        });
+    }
+
+    function resetAutoplay() {
+        clearInterval(heroAutoplay);
+        heroAutoplay = setInterval(() => goToSlide((heroCurrentSlide + 1) % heroSlideCount), 5000);
+    }
+
+    heroDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            goToSlide(parseInt(dot.dataset.slide));
+            resetAutoplay();
+        });
+    });
+
+    // Drag / swipe
+    function onDragStart(x) {
+        isDragging = true;
+        dragStartX = x;
+        dragDeltaX = 0;
+        heroSlides.style.transition = 'none';
+        clearInterval(heroAutoplay);
+    }
+
+    function onDragMove(x) {
+        if (!isDragging) return;
+        dragDeltaX = x - dragStartX;
+        const base = -(heroCurrentSlide * heroCarousel.offsetWidth);
+        heroSlides.style.transform = `translateX(${base + dragDeltaX}px)`;
+    }
+
+    function onDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        const threshold = heroCarousel.offsetWidth * 0.2;
+        if (dragDeltaX < -threshold) goToSlide(heroCurrentSlide + 1);
+        else if (dragDeltaX > threshold) goToSlide(heroCurrentSlide - 1);
+        else goToSlide(heroCurrentSlide);
+        resetAutoplay();
+    }
+
+    // Mouse events
+    heroCarousel.addEventListener('mousedown', e => { onDragStart(e.clientX); e.preventDefault(); });
+    window.addEventListener('mousemove', e => { if (isDragging) onDragMove(e.clientX); });
+    window.addEventListener('mouseup', onDragEnd);
+
+    // Touch events
+    heroCarousel.addEventListener('touchstart', e => onDragStart(e.touches[0].clientX), { passive: true });
+    heroCarousel.addEventListener('touchmove', e => { if (isDragging) onDragMove(e.touches[0].clientX); }, { passive: true });
+    heroCarousel.addEventListener('touchend', onDragEnd);
+
+    // Prevent link/button clicks during drag
+    heroCarousel.addEventListener('click', e => { if (Math.abs(dragDeltaX) > 5) e.stopPropagation(); }, true);
+
+    heroAutoplay = setInterval(() => goToSlide((heroCurrentSlide + 1) % heroSlideCount), 5000);
+
+    // --- 5 & 6. Nav Glassmorphism + Hero Background & Logo Transition ---
     const mainNav = document.getElementById('main-nav');
-    if (mainNav) {
-        window.addEventListener('scroll', () => {
+    const heroSection = document.getElementById('hero-section');
+    const navLogo = document.getElementById('nav-logo');
+    const HERO_GRADIENT = 'linear-gradient(135deg, #6924E1 0%, #062EED 100%)';
+    const BONE_BG = '#F0F1FA';
+    let heroVisible = true;
+
+    const navMenu = mainNav ? mainNav.querySelector('div.absolute') : null;
+
+    function updateNav() {
+        if (!mainNav) return;
+        if (heroVisible) {
+            // Hero: nav transparente, menu oculto, logo branco
+            mainNav.classList.remove('bg-white/80', 'backdrop-blur-xl', 'border-b_grey_blue/10');
+            mainNav.classList.add('bg-transparent', 'border-transparent');
+            if (navMenu) { navMenu.style.opacity = '0'; navMenu.style.pointerEvents = 'none'; }
+            if (navLogo) navLogo.src = './design-system/assets/bemobi_logo_branco.svg';
+        } else {
+            // Fora da hero: glassmorphism, menu branco sem item ativo, logo colorido
             if (window.scrollY > 20) {
                 mainNav.classList.add('bg-white/80', 'backdrop-blur-xl', 'border-b_grey_blue/10');
                 mainNav.classList.remove('bg-transparent', 'border-transparent');
@@ -869,7 +961,100 @@ document.addEventListener('DOMContentLoaded', function () {
                 mainNav.classList.remove('bg-white/80', 'backdrop-blur-xl', 'border-b_grey_blue/10');
                 mainNav.classList.add('bg-transparent', 'border-transparent');
             }
-        });
+            if (navMenu) { navMenu.style.opacity = '1'; navMenu.style.pointerEvents = ''; }
+            mainNav.querySelectorAll('a.nav-link').forEach(a => {
+                a.style.color = '';
+                a.style.background = '';
+            });
+            if (navLogo) navLogo.src = './design-system/assets/bemobi_logo.svg';
+        }
+    }
+
+    // Aplica estado inicial imediatamente (hero visível ao carregar)
+    updateNav();
+
+    if (mainNav) {
+        window.addEventListener('scroll', updateNav);
+    }
+
+    // Hero rotating label
+    const heroLabel = document.getElementById('hero-rotating-label');
+    if (heroLabel) {
+        const labels = [
+            '17.810 acordos gerados · Jan–Mar/26',
+            'Total Recuperado via Régua · Jan/26 – Mar/26',
+            '245.423 faturas em Mar/26',
+            'Inadimplência em Mar/26: 8,1%',
+            'Média mensal recuperada: R$ 739.833',
+            '70,6% dos pagamentos realizados até o vencimento',
+        ];
+        let current = 0;
+
+        function showLabel(text, animIn) {
+            heroLabel.classList.remove('label-out', 'label-in');
+            void heroLabel.offsetWidth; // force reflow
+            heroLabel.textContent = text;
+            heroLabel.classList.add(animIn ? 'label-in' : '');
+        }
+
+        function nextLabel() {
+            heroLabel.classList.remove('label-in');
+            heroLabel.classList.add('label-out');
+            heroLabel.addEventListener('animationend', function onOut() {
+                heroLabel.removeEventListener('animationend', onOut);
+                current = (current + 1) % labels.length;
+                heroLabel.classList.remove('label-out');
+                heroLabel.textContent = labels[current];
+                void heroLabel.offsetWidth;
+                heroLabel.classList.add('label-in');
+            }, { once: true });
+        }
+
+        // Mostra o primeiro texto com entrada; loop começa após 3s (mesmo intervalo dos demais)
+        showLabel(labels[0], true);
+        setTimeout(() => setInterval(nextLabel, 3000), 3000);
+    }
+
+    if (heroSection) {
+        // Cores em RGB para interpolação suave
+        const gradientStart = { r: 105, g: 36,  b: 225 }; // #6924E1
+        const gradientEnd   = { r: 6,   g: 46,  b: 237 }; // #062EED
+        const boneColor     = { r: 240, g: 241, b: 250 }; // #F0F1FA
+
+        function lerpColor(a, b, t) {
+            return {
+                r: Math.round(a.r + (b.r - a.r) * t),
+                g: Math.round(a.g + (b.g - a.g) * t),
+                b: Math.round(a.b + (b.b - a.b) * t),
+            };
+        }
+
+        function updateHeroBg() {
+            const rect = heroSection.getBoundingClientRect();
+            const heroH = heroSection.offsetHeight;
+            // progress 0 = hero totalmente visível, 1 = hero totalmente fora
+            const progress = Math.min(1, Math.max(0, -rect.top / (heroH * 0.5)));
+
+            if (progress < 1) {
+                // Interpola entre gradiente (início) e bone
+                const start = lerpColor(gradientStart, boneColor, progress);
+                const end   = lerpColor(gradientEnd,   boneColor, progress);
+                document.body.style.background =
+                    `linear-gradient(135deg, rgb(${start.r},${start.g},${start.b}) 0%, rgb(${end.r},${end.g},${end.b}) 100%)`;
+            } else {
+                document.body.style.background = BONE_BG;
+            }
+
+            const wasVisible = heroVisible;
+            heroVisible = progress < 0.6;
+            if (wasVisible !== heroVisible) updateNav();
+        }
+
+        document.body.style.transition = 'none';
+        document.body.style.background = HERO_GRADIENT;
+
+        window.addEventListener('scroll', updateHeroBg, { passive: true });
+        updateHeroBg();
     }
 
 });

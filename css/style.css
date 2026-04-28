@@ -115,3 +115,42 @@
     font-family: 'Poppins', sans-serif !important;
     color: #020F5B !important;
 }
+
+/* ── Hero Carousel Drag ── */
+#hero-carousel {
+    cursor: grab;
+    user-select: none;
+}
+#hero-carousel:active {
+    cursor: grabbing;
+}
+
+/* ── Hero Rotating Label ── */
+.hero-label-wrap {
+    min-height: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#hero-rotating-label {
+    will-change: transform, opacity;
+}
+
+#hero-rotating-label.label-out {
+    animation: heroLabelOut 0.45s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+#hero-rotating-label.label-in {
+    animation: heroLabelIn 0.45s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes heroLabelOut {
+    0%   { transform: translateY(0);     opacity: 1; filter: blur(0px); }
+    100% { transform: translateY(-28px); opacity: 0; filter: blur(3px); }
+}
+
+@keyframes heroLabelIn {
+    0%   { transform: translateY(28px);  opacity: 0; filter: blur(3px); }
+    100% { transform: translateY(0);     opacity: 1; filter: blur(0px); }
+}

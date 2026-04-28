@@ -57,114 +57,174 @@
     <!-- Custom CSS Styles -->
     <link rel="stylesheet" href="./css/style.css">
 </head>
-<body class="bg-b_bone text-b_deep_blue font-sans antialiased selection:bg-b_blue_pure selection:text-b_white overflow-x-hidden min-h-screen">
-
-    <!-- Noise Overlay -->
-    <div class="bg-noise"></div>
+<body class="text-b_deep_blue font-sans antialiased selection:bg-b_blue_pure selection:text-b_white overflow-x-hidden min-h-screen" style="background: linear-gradient(135deg, #6924E1 0%, #062EED 100%); transition: background 0.7s ease;">
 
     <!-- Navigation / Top Menu -->
     <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent transition-all duration-300">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-10 h-20 flex items-center justify-between relative">
             
             <!-- Logo -->
-            <div class="flex items-center gap-2">
-                <img src="./design-system/assets/bemobi_logo.svg" alt="Bemobi Logo" class="h-10 object-contain">
-            </div>
+            <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="flex items-center gap-2 cursor-pointer">
+                <img id="nav-logo" src="./design-system/assets/bemobi_logo_branco.svg" alt="Bemobi Logo" class="h-10 object-contain transition-opacity duration-300">
+            </a>
 
             <!-- Centered Menu (Sem fundo) -->
-            <div class="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-2">
+            <div class="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-2" style="opacity: 0; pointer-events: none; transition: opacity 0.4s ease;">
                 <!-- Links -->
-                <a href="#faturas" class="px-5 py-2 rounded-full bg-b_bone text-b_deep_blue border border-b_grey_blue/10 transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Faturas</a>
-                <a href="#inadimplencia" class="px-5 py-2 rounded-full text-b_grey_blue hover:bg-b_bone/50 hover:text-b_deep_blue transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Inadimplência</a>
-                <a href="#negociacoes" class="px-5 py-2 rounded-full text-b_grey_blue hover:bg-b_bone/50 hover:text-b_deep_blue transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Negociações</a>
-                <a href="#recorrencia" class="px-5 py-2 rounded-full text-b_grey_blue hover:bg-b_bone/50 hover:text-b_deep_blue transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Recorrência</a>
+                <a href="#faturas" class="nav-link px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Faturas</a>
+                <a href="#inadimplencia" class="nav-link px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Inadimplência</a>
+                <a href="#negociacoes" class="nav-link px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Negociações</a>
+                <a href="#recorrencia" class="nav-link px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-b_blue_pure/50">Recorrência</a>
             </div>
 
         </div>
     </nav>
 
+    <!-- Hero Section (full-width, fora do main) -->
+    <section id="hero-section" class="relative flex flex-col justify-end pt-24 lg:pt-32 pb-0">
+
+        <!-- Círculos decorativos de fundo -->
+        <div class="absolute -right-40 top-10 w-[600px] h-[600px] rounded-full bg-white/5 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-40 bottom-20 w-[400px] h-[400px] rounded-full bg-b_blue_pure/20 blur-3xl pointer-events-none"></div>
+
+        <!-- Conteúdo central: label + valor principal -->
+        <div class="flex flex-col items-center text-center text-white px-6 lg:px-10 pb-3">
+            <!-- Label rotativa -->
+            <div class="hero-label-wrap mb-6">
+                <p id="hero-rotating-label" class="font-mono text-xs lg:text-sm uppercase tracking-[0.2em] text-white/60" style="min-height: 1.25em;">&nbsp;</p>
+            </div>
+            <div class="font-black text-6xl lg:text-7xl xl:text-8xl tracking-tighter leading-none">
+                <span class="counter" data-target="2219499.23" data-prefix="R$ " data-decimals="2">R$ 0</span>
+            </div>
+        </div>
+
+        <!-- KPI Cards Carrossel -->
+        <div class="relative z-10 max-w-[1400px] mx-auto w-full px-6 lg:px-10 pb-0 translate-y-1/2">
+
+            <!-- Slides wrapper -->
+            <div id="hero-carousel" class="relative overflow-hidden">
+                <div id="hero-slides" class="flex transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" style="will-change: transform;">
+
+                    <!-- Slide 1: KPIs gerais -->
+                    <div class="hero-slide min-w-full grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+                        <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-hover flex flex-col justify-between">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Total de Faturas</p>
+                                <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="245423">0</span></h3>
+                                <p class="text-xs text-b_grey_blue mb-6">Mar/26 — último mês fechado</p>
+                            </div>
+                            <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_purple_light/20 text-b_purple_pure rounded-full text-xs font-semibold">
+                                <iconify-icon icon="solar:arrow-right-down-linear" class="text-sm"></iconify-icon>
+                                -0.9% vs Fev/26
+                            </div>
+                        </div>
+
+                        <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-hover flex flex-col justify-between">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Inadimplência</p>
+                                <h3 class="font-semibold text-4xl text-b_danger tracking-tight mb-1"><span class="counter" data-target="8.1" data-decimals="1" data-suffix="%">0,0%</span></h3>
+                                <p class="text-xs text-b_grey_blue mb-6">Mar/26 — último mês fechado</p>
+                            </div>
+                            <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_danger/10 text-b_danger rounded-full text-xs font-semibold">
+                                <iconify-icon icon="solar:arrow-right-up-linear" class="text-sm"></iconify-icon>
+                                +1.7pp vs Fev/26
+                            </div>
+                        </div>
+
+                        <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-hover flex flex-col justify-between">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Média Mensal Recuperada</p>
+                                <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="739833" data-prefix="R$ ">R$ 0</span></h3>
+                                <p class="text-xs text-b_grey_blue mb-6">Jan–Mar/26 · via régua de cobrança</p>
+                            </div>
+                            <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_success/10 text-b_success rounded-full text-xs font-semibold">
+                                <iconify-icon icon="solar:arrow-right-up-linear" class="text-sm"></iconify-icon>
+                                +94% Jan→Mar
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Slide 2: Acordos pagos por mês — Jan/Mar/26 -->
+                    <div class="hero-slide min-w-full grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+                        <!-- Janeiro -->
+                        <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-hover flex flex-col justify-between">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1">Janeiro / 26</p>
+                                <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="535476" data-prefix="R$ ">R$ 0</span></h3>
+                                <p class="text-xs text-b_grey_blue mb-4">4.300 acordos pagos</p>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span class="font-semibold text-b_purple_pure">Grace (WhatsApp)</span><span class="font-mono font-bold text-b_purple_pure">3.312</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span>Portal do Cliente</span><span class="font-mono font-medium text-b_deep_blue">679</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span>Regra de Notificação</span><span class="font-mono font-medium text-b_deep_blue">309</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fevereiro -->
+                        <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-hover flex flex-col justify-between">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1">Fevereiro / 26</p>
+                                <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="650115" data-prefix="R$ ">R$ 0</span></h3>
+                                <p class="text-xs text-b_grey_blue mb-4">5.160 acordos pagos</p>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span class="font-semibold text-b_purple_pure">Grace (WhatsApp)</span><span class="font-mono font-bold text-b_purple_pure">4.017</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span>Portal do Cliente</span><span class="font-mono font-medium text-b_deep_blue">628</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span>Regra de Notificação</span><span class="font-mono font-medium text-b_deep_blue">515</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Março -->
+                        <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-hover flex flex-col justify-between">
+                            <div>
+                                <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1">Março / 26</p>
+                                <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="1033906" data-prefix="R$ ">R$ 0</span></h3>
+                                <p class="text-xs text-b_grey_blue mb-4">8.350 acordos pagos</p>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span class="font-semibold text-b_purple_pure">Grace (WhatsApp)</span><span class="font-mono font-bold text-b_purple_pure">7.337</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span>Portal do Cliente</span><span class="font-mono font-medium text-b_deep_blue">538</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-b_grey_blue">
+                                        <span>Regra de Notificação</span><span class="font-mono font-medium text-b_deep_blue">475</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Dots de navegação -->
+            <div id="hero-dots" class="flex justify-center gap-2 mt-5">
+                <button class="hero-dot w-6 h-2 rounded-full bg-white transition-all duration-300" data-slide="0" aria-label="Slide 1: KPIs gerais"></button>
+                <button class="hero-dot w-2 h-2 rounded-full bg-white/30 transition-all duration-300" data-slide="1" aria-label="Slide 2: Breakdown mensal"></button>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Main Content -->
-    <main class="pt-36 pb-24 max-w-[1400px] mx-auto px-6 lg:px-10 relative z-10">
-
-        <!-- 1. Visão Geral (KPIs) -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-24 reveal active">
-            
-            <!-- Hero KPI (Esquerda) -->
-            <div class="col-span-1 lg:col-span-5 xl:col-span-6 rounded-[2rem] p-8 lg:p-10 text-white relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500 shadow-hover flex flex-col justify-between min-h-[320px]" style="background: linear-gradient(135deg, #6924E1 0%, #062EED 100%);">
-                <!-- Efeito Glass Interno -->
-                <div class="absolute inset-0 bg-white/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <!-- Círculos Abstratos -->
-                <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
-                <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-b_blue_light/20 blur-xl pointer-events-none"></div>
-                
-                <div class="relative z-10 flex flex-col h-full justify-between">
-                    <div>
-                        <p class="font-mono text-xs uppercase tracking-widest text-white/60 mt-2">Total Recuperado via Régua • Jan/26 – Mar/26</p>
-                    </div>
-                    <div class="flex-1 flex flex-col justify-center">
-                        <div class="font-semibold text-4xl lg:text-5xl xl:text-6xl tracking-tighter leading-none"><span class="counter" data-target="2219499.23" data-prefix="R$ " data-decimals="2">R$ 0</span></div>
-                        <p class="font-mono text-xs text-white/40 mt-2 tracking-wide">17.810 acordos gerados · Jan–Mar/26</p>
-                    </div>
-                    
-                    <div class="flex flex-wrap items-center gap-3">
-                        <div class="bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2">
-                            <iconify-icon icon="solar:graph-up-linear" class="text-white opacity-80"></iconify-icon>
-                            <span class="text-xs font-medium">Média R$ 739.833/mês</span>
-                        </div>
-                        <div class="bg-b_success/20 border border-b_success/30 px-4 py-2 rounded-full flex items-center gap-2">
-                            <iconify-icon icon="solar:arrow-right-up-linear" class="text-b_success text-sm"></iconify-icon>
-                            <span class="text-xs font-mono font-semibold text-b_success">+94% Jan→Mar</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KPIs Secundários (Direita) -->
-            <div class="col-span-1 lg:col-span-7 xl:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                
-                <!-- KPI Faturas -->
-                <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-glass group hover:border-b_blue_pure/30 hover:shadow-hover transition-all duration-500 flex flex-col justify-between">
-                    <div>
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Total de Faturas</p>
-                        <h3 class="font-semibold text-4xl text-b_deep_blue tracking-tight mb-1"><span class="counter" data-target="245423">0</span></h3>
-                        <p class="text-xs text-b_grey_blue mb-6">Mar/26 — último mês fechado</p>
-                    </div>
-                    <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_purple_light/20 text-b_purple_pure rounded-full text-xs font-semibold">
-                        <iconify-icon icon="solar:arrow-right-down-linear" class="text-sm"></iconify-icon>
-                        -0.9% vs Fev/26
-                    </div>
-                </div>
-
-                <!-- KPI Inadimplência -->
-                <div class="rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-glass group hover:border-b_danger/30 hover:shadow-hover transition-all duration-500 flex flex-col justify-between">
-                    <div>
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Inadimplência</p>
-                        <h3 class="font-semibold text-4xl text-b_danger tracking-tight mb-1"><span class="counter" data-target="8.1" data-decimals="1" data-suffix="%">0,0%</span></h3>
-                        <p class="text-xs text-b_grey_blue mb-6">Mar/26 — último mês fechado</p>
-                    </div>
-                    <div class="inline-flex items-center self-start gap-1.5 px-3 py-1.5 bg-b_danger/10 text-b_danger rounded-full text-xs font-semibold">
-                        <iconify-icon icon="solar:arrow-right-up-linear" class="text-sm"></iconify-icon>
-                        +1.7pp vs Fev/26
-                    </div>
-                </div>
-
-                <!-- KPI Retenção (Wider) -->
-                <div class="sm:col-span-2 rounded-[2rem] p-8 bg-white border border-b_grey_blue/10 shadow-glass group hover:border-b_blue_pure/30 hover:shadow-hover transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                    <div>
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-2">Taxa de Retenção</p>
-                        <h3 class="font-semibold text-4xl text-b_blue_pure tracking-tight mb-1"><span class="counter" data-target="88" data-suffix="%">0%</span></h3>
-                        <p class="text-xs text-b_grey_blue">Fev–Mar/26 — recorrência</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="inline-flex items-center gap-1.5 px-4 py-2 bg-b_blue_light/20 text-b_blue_pure rounded-full text-sm font-semibold">
-                            <iconify-icon icon="solar:arrow-right-up-linear" class="text-lg"></iconify-icon>
-                            Estável Fev/Mar
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
+    <main class="pt-48 pb-24 max-w-[1400px] mx-auto px-6 lg:px-10 relative z-10">
 
         <!-- 2. Volume & Formas de Pagamento -->
         <section id="faturas" class="mb-24 scroll-mt-32">
