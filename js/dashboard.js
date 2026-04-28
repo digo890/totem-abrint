@@ -251,86 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
     chartDistribuicao.render();
 
 
-    // --- 3. Gráfico: Porcentagem por Forma de Pagamento ao Longo do Tempo (Line Chart) ---
-    // Fonte: "Porcentagem de pagamentos por Forma-data-2026-04-23 13_26_16.csv"
-    // Dados: Jan/26, Fev/26, Mar/26 × 5 formas de pagamento
-    var chartFormaTempoEl = document.querySelector("#chart-forma-tempo");
-    if (chartFormaTempoEl) {
-        var optionsFormaTempo = {
-            series: [
-                { name: 'Pix',      data: [49.4, 49.7, 50.2] },
-                { name: 'Boleto',   data: [42.4, 42.0, 41.7] },
-                { name: 'Crédito',  data: [5.9, 6.0, 6.0]   },
-                { name: 'POS',      data: [2.2, 2.2, 2.1]   },
-                { name: 'Pix Auto', data: [0.1, 0.1, 0.1]   }
-            ],
-            chart: {
-                type: 'line',
-                height: 300,
-                toolbar: { show: false },
-                fontFamily: 'Poppins, sans-serif',
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 800
-                }
-            },
-            colors: ['#6924E1', '#062EED', '#B6D5FF', '#5561A6', '#CCC8FF'],
-            stroke: {
-                width: [3, 3, 2, 2, 2],
-                curve: 'smooth',
-                dashArray: [0, 0, 0, 4, 6]
-            },
-            markers: {
-                size: 5,
-                hover: {
-                    sizeOffset: 2
-                }
-            },
-            xaxis: {
-                categories: ['Jan/26', 'Fev/26', 'Mar/26'],
-                axisBorder: { show: false },
-                axisTicks: { show: false },
-                labels: {
-                    style: {
-                        colors: '#5561A6',
-                        fontFamily: '"JetBrains Mono", monospace',
-                        fontSize: '12px'
-                    }
-                }
-            },
-            yaxis: {
-                max: 60,
-                min: 0,
-                labels: {
-                    formatter: function(val) { return val.toFixed(1) + '%'; },
-                    style: {
-                        colors: '#5561A6',
-                        fontFamily: '"JetBrains Mono", monospace'
-                    }
-                }
-            },
-            grid: {
-                borderColor: 'rgba(85, 97, 166, 0.1)',
-                strokeDashArray: 4
-            },
-            legend: {
-                show: false
-            },
-            tooltip: {
-                theme: 'light',
-                y: {
-                    formatter: function(val) { return val.toFixed(1) + '%'; }
-                },
-                style: {
-                    fontFamily: '"JetBrains Mono", monospace'
-                }
-            }
-        };
-
-        var chartFormaTempo = new ApexCharts(chartFormaTempoEl, optionsFormaTempo);
-        chartFormaTempo.render();
-    }
 
 
     // =========================================================
@@ -981,12 +901,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const heroLabel = document.getElementById('hero-rotating-label');
     if (heroLabel) {
         const labels = [
-            '17.810 acordos gerados · Jan–Mar/26',
-            'Total Recuperado via Régua · Jan/26 – Mar/26',
-            '245.423 faturas em Mar/26',
-            'Inadimplência em Mar/26: 8,1%',
-            'Média mensal recuperada: R$ 739.833',
-            '70,6% dos pagamentos realizados até o vencimento',
+            'Total Recuperado via Régua · Jan–Mar/26',
+            '17.810 Acordos Gerados · Jan–Mar/26',
         ];
         let current = 0;
 
