@@ -664,7 +664,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Chart: Origem da Negociação (Barras Empilhadas) ---
     var optionsOrigem = {
         series: [
-            { name: 'Grace (Automático)', data: [3312, 4017, 7337] },
+            { name: 'Grace (WhatsApp)', data: [3312, 4017, 7337] },
             { name: 'Portal do Cliente',  data: [679, 628, 538] },
             { name: 'Regra de Notificação', data: [309, 515, 475] }
         ],
