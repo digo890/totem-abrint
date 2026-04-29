@@ -35,15 +35,45 @@
 }
 
 /* ── Micro Animations & Interaction ── */
+:root {
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .reveal { 
     opacity: 0; 
     transform: translateY(30px); 
-    transition: all 0.8s cubic-bezier(0.16,1,0.3,1); 
+    transition: all 0.8s var(--ease-out-expo); 
 }
 .reveal.active { 
     opacity: 1; 
     transform: translateY(0); 
 }
+
+/* Hero Entrance Choreography */
+.hero-reveal {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo);
+    will-change: opacity, transform;
+}
+.hero-reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.hero-reveal-carousel {
+    opacity: 0;
+    transform: translateY(calc(50% + 40px)) scale(0.96);
+    transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo);
+    will-change: opacity, transform;
+}
+.hero-reveal-carousel.active {
+    opacity: 1;
+    transform: translateY(50%) scale(1);
+}
+
 
 .draw-line { 
     width: 0; 
