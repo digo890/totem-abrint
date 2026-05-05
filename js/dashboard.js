@@ -973,4 +973,238 @@ document.addEventListener('DOMContentLoaded', function () {
         updateHeroBg();
     }
 
+    // =========================================================
+    // INTELIGÊNCIA ANALÍTICA E MODAIS
+    // =========================================================
+
+    const insightsData = {
+        'formas-pagamento': {
+            title: 'Pix (49,7%) ultrapassou o Boleto',
+            icon: 'solar:pie-chart-3-bold-duotone',
+            iconColor: 'text-b_blue_pure',
+            iconBg: 'bg-b_blue_pure/10',
+            content: `
+            <div class="flex flex-col gap-6 pt-4">
+                <div class="flex items-center gap-6">
+                    <div class="shrink-0">
+                        <span class="block font-mono text-[10px] uppercase tracking-widest text-b_grey_blue mb-1">Adoção Pix</span>
+                        <div class="font-mono text-6xl tracking-tighter text-b_blue_pure leading-none">49,7%</div>
+                    </div>
+                    <div class="border-l border-b_grey_blue/10 pl-5">
+                        <p class="text-sm text-b_ocean_blue/80 font-medium leading-snug">
+                            Receita em D+0 injeta caixa imediato, eliminando espera da compensação.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold text-b_deep_blue mb-1 tracking-tight">O que isso significa?</h4>
+                    <p class="text-b_ocean_blue/80 text-sm leading-relaxed">
+                        Adoção digital reduz custo de emissão. Com jornada sem fricção, a chance do cliente esquecer o pagamento cai 3x.
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-b_grey_blue/10">
+                    <h5 class="text-b_deep_blue font-bold mb-1 flex items-center gap-2 text-sm">
+                        <iconify-icon icon="solar:lightbulb-bolt-bold-duotone" class="text-b_blue_pure text-lg"></iconify-icon>
+                        Próxima Oportunidade
+                    </h5>
+                    <p class="text-xs text-b_grey_blue leading-relaxed">
+                        Cartão representa só 5,9%. Campanhas para <strong class="text-b_deep_blue">Pix Automático</strong> ou <strong class="text-b_deep_blue">Cartão</strong> reduzem a inadimplência passiva a zero.
+                    </p>
+                </div>
+            </div>
+            `
+        },
+        'janela-cobranca': {
+            title: '3 em cada 4 atrasos duram só 10 dias',
+            icon: 'solar:alarm-bold-duotone',
+            iconColor: 'text-b_danger',
+            iconBg: 'bg-b_danger/10',
+            content: `
+            <div class="flex flex-col gap-6 pt-4">
+                <div class="flex items-center gap-6">
+                    <div class="shrink-0">
+                        <span class="block font-mono text-[10px] uppercase tracking-widest text-b_grey_blue mb-1">Recuperação Natural</span>
+                        <div class="font-mono text-6xl tracking-tighter text-b_danger leading-none">75,2%</div>
+                    </div>
+                    <div class="border-l border-b_grey_blue/10 pl-5">
+                        <p class="text-sm text-b_ocean_blue/80 font-medium leading-snug">
+                            Dos clientes que atrasam, três quartos pagam a dívida em até 10 dias.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold text-b_deep_blue mb-1 tracking-tight">A Janela Crítica de Recuperação</h4>
+                    <p class="text-b_ocean_blue/80 text-sm leading-relaxed">
+                        O ciclo de pagamento aponta que a imensa maioria do atraso inicial é operacional (esquecimento ou folha). O foco deve ser puramente facilitação (Pix Copia-e-Cola).
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-b_grey_blue/10">
+                    <div class="flex items-start gap-3">
+                        <iconify-icon icon="solar:target-bold-duotone" class="text-2xl text-b_purple_pure shrink-0 mt-0.5"></iconify-icon>
+                        <div>
+                            <h5 class="text-b_deep_blue font-bold mb-1 text-sm tracking-tight">Mudança no 11º Dia</h5>
+                            <p class="text-xs text-b_grey_blue leading-relaxed">O volume de pagamentos despenca 86,5% a partir daqui. Assuma risco de inadimplência definitiva e dispare uma <strong class="text-b_deep_blue font-semibold">Oferta de Negociação Ativa</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
+        },
+        'anomalia-conversao': {
+            title: 'WhatsApp converte o dobro',
+            icon: 'solar:chat-square-check-bold-duotone',
+            iconColor: 'text-b_purple_pure',
+            iconBg: 'bg-b_purple_pure/10',
+            content: `
+            <div class="flex flex-col gap-6 pt-4">
+                <div class="flex items-center gap-6">
+                    <div class="shrink-0">
+                        <span class="block font-mono text-[10px] uppercase tracking-widest text-b_grey_blue mb-1">Grace vs. Portal</span>
+                        <div class="font-mono text-6xl tracking-tighter text-b_purple_pure leading-none">2x</div>
+                    </div>
+                    <div class="border-l border-b_grey_blue/10 pl-5">
+                        <p class="text-sm text-b_ocean_blue/80 font-medium leading-snug">
+                            A conversão dobra ao remover barreiras. Fricção de login reduz pagamentos.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-b_ocean_blue/80 text-sm leading-relaxed">
+                        A inteligência Grace (60,7%) dobra a conversão do Portal (29,6%). A fricção de login no app custa recuperações valiosas.
+                    </p>
+                </div>
+
+                <div class="flex gap-4 pt-4 border-t border-b_grey_blue/10">
+                    <div class="w-1 h-auto bg-gradient-to-b from-b_purple_pure to-b_blue_pure rounded-full opacity-60 shrink-0"></div>
+                    <div>
+                        <h5 class="text-b_deep_blue font-bold mb-1 tracking-tight text-sm">Fricção Zero Vence</h5>
+                        <p class="text-xs text-b_grey_blue leading-relaxed">
+                            O bot entrega o "Pix Copia-e-Cola" direto no chat. Sem senhas esquecidas, sem troca de app: o dinheiro entra na hora.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            `
+        },
+        'fadiga-notificacao': {
+            title: 'Repetição não gera conversão',
+            icon: 'solar:routing-bold-duotone',
+            iconColor: 'text-b_success',
+            iconBg: 'bg-b_success/10',
+            content: `
+            <div class="flex flex-col gap-6 pt-4">
+                <div class="flex items-center gap-6 border-b border-b_grey_blue/10 pb-4">
+                    <div class="flex-1 text-center">
+                        <span class="block font-mono text-[10px] uppercase tracking-widest text-b_grey_blue mb-1">1º Touch</span>
+                        <div class="font-mono text-5xl tracking-tighter text-b_success leading-none">94%</div>
+                    </div>
+                    <div class="w-px h-10 bg-b_grey_blue/20 shrink-0"></div>
+                    <div class="flex-1 text-center">
+                        <span class="block font-mono text-[10px] uppercase tracking-widest text-b_grey_blue mb-1">2º Touch</span>
+                        <div class="font-mono text-5xl tracking-tighter text-b_danger leading-none">2%</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold text-b_deep_blue mb-1 tracking-tight">Fadiga de Notificação</h4>
+                    <p class="text-b_ocean_blue/80 text-sm leading-relaxed">
+                        Insistir no mesmo canal desgasta a relação e cria "cegueira intencional", sem gerar novas conversões.
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-b_grey_blue/10">
+                    <h5 class="font-bold mb-1 flex items-center gap-2 text-b_deep_blue text-sm tracking-tight">
+                        <iconify-icon icon="solar:routing-3-bold-duotone" class="text-b_success text-lg"></iconify-icon>
+                        Channel Shift Automático
+                    </h5>
+                    <p class="text-xs text-b_grey_blue leading-relaxed">
+                        Ignorou o canal? <strong class="text-b_deep_blue font-semibold">Mude o canal, não aumente o volume.</strong> Escale para WhatsApp ou Push.
+                    </p>
+                </div>
+            </div>
+            `
+        }
+    };
+
+    const modal = document.getElementById('insight-modal');
+    const modalBackdrop = document.getElementById('insight-modal-backdrop');
+    const modalCard = document.getElementById('insight-modal-card');
+    const modalContent = document.getElementById('insight-modal-content');
+    const btnClose = document.getElementById('insight-modal-close');
+    const modalTitle = document.getElementById('insight-modal-title');
+    const modalIcon = document.getElementById('insight-modal-icon');
+    const modalIconBg = document.getElementById('insight-modal-icon-bg');
+
+    if (modal && modalBackdrop && modalCard && modalContent && btnClose) {
+        
+        function openModal(insightKey) {
+            const data = insightsData[insightKey];
+            if (!data) return;
+            
+            // Popula Header
+            modalTitle.textContent = data.title;
+            modalIcon.setAttribute('icon', data.icon);
+            
+            // Reset colors
+            modalIcon.className = 'text-2xl';
+            modalIconBg.className = 'w-12 h-12 rounded-full flex items-center justify-center shrink-0';
+            
+            // Applica novas cores
+            modalIcon.classList.add(data.iconColor);
+            modalIconBg.classList.add(...data.iconBg.split(' '));
+
+            // Popula Content
+            modalContent.innerHTML = data.content;
+            
+            // Show modal
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            
+            // Animate card in
+            setTimeout(() => {
+                modalCard.classList.remove('scale-95', 'opacity-0');
+                modalCard.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            // Animate card out
+            modalCard.classList.remove('scale-100', 'opacity-100');
+            modalCard.classList.add('scale-95', 'opacity-0');
+            
+            // Hide modal
+            setTimeout(() => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Add event listeners to cards
+        document.querySelectorAll('.insight-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function(e) {
+                const key = this.getAttribute('data-insight');
+                if(key) {
+                    openModal(key);
+                }
+            });
+        });
+
+        modalBackdrop.addEventListener('click', closeModal);
+        btnClose.addEventListener('click', closeModal);
+        
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !modal.classList.contains('pointer-events-none')) {
+                closeModal();
+            }
+        });
+    }
+
 });

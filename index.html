@@ -250,7 +250,13 @@
                 </div>
 
                 <!-- Gráfico de Pizza -->
-                <div class="col-span-1 xl:col-span-4 rounded-[2rem] p-6 lg:p-8 xl:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col" style="transition-delay: 0.2s;">
+                <div class="col-span-1 xl:col-span-4 rounded-[2rem] p-6 lg:p-8 xl:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col relative cursor-pointer group transition-all duration-300 hover:shadow-hover hover:-translate-y-1 hover:ring-2 hover:ring-b_purple_pure/30 insight-trigger" data-insight="formas-pagamento" style="transition-delay: 0.2s;">
+                    <!-- Indicador Visual Insight -->
+                    <div class="absolute top-6 right-6 lg:top-8 lg:right-8 flex items-center gap-1.5 px-3 py-1.5 bg-b_purple_pure/5 text-b_purple_pure rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <iconify-icon icon="solar:magic-stick-3-bold-duotone" class="text-sm"></iconify-icon>
+                        <span class="text-[10px] font-semibold tracking-wide uppercase">Insight</span>
+                    </div>
+
                     <div class="mb-8">
                         <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Distribuição</p>
                         <h3 class="font-semibold text-xl text-b_deep_blue">Formas de Pagamento</h3>
@@ -323,7 +329,12 @@
             <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
 
                 <!-- Evolução Temporal do Ciclo -->
-                <div class="col-span-1 xl:col-span-7 rounded-[2rem] p-6 lg:p-8 xl:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col" style="transition-delay: 0.1s;">
+                <div class="col-span-1 xl:col-span-7 rounded-[2rem] p-6 lg:p-8 xl:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal flex flex-col relative cursor-pointer group transition-all duration-300 hover:shadow-hover hover:-translate-y-1 hover:ring-2 hover:ring-b_purple_pure/30 insight-trigger" data-insight="janela-cobranca" style="transition-delay: 0.1s;">
+                    <!-- Indicador Visual Insight -->
+                    <div class="absolute top-6 right-6 lg:top-8 lg:right-8 flex items-center gap-1.5 px-3 py-1.5 bg-b_purple_pure/5 text-b_purple_pure rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <iconify-icon icon="solar:magic-stick-3-bold-duotone" class="text-sm"></iconify-icon>
+                        <span class="text-[10px] font-semibold tracking-wide uppercase">Insight</span>
+                    </div>
 
                     <!-- Cabeçalho -->
                     <div class="mb-6">
@@ -550,11 +561,17 @@
             </div>
 
             <!-- Linha 2: Origem da Negociação (Gráfico de Barras Empilhadas Largo) -->
-            <div class="mb-8 rounded-[2rem] p-6 lg:p-8 xl:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal" style="transition-delay: 0.1s;">
+            <div class="mb-8 rounded-[2rem] p-6 lg:p-8 xl:p-10 bg-white border border-b_grey_blue/10 shadow-glass reveal relative cursor-pointer group transition-all duration-300 hover:shadow-hover hover:-translate-y-1 hover:ring-2 hover:ring-b_purple_pure/30 insight-trigger" data-insight="anomalia-conversao" style="transition-delay: 0.1s;">
+                <!-- Indicador Visual Insight -->
+                <div class="absolute top-6 right-6 lg:top-8 lg:right-8 flex items-center gap-1.5 px-3 py-1.5 bg-b_purple_pure/5 text-b_purple_pure rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <iconify-icon icon="solar:magic-stick-3-bold-duotone" class="text-sm"></iconify-icon>
+                    <span class="text-[10px] font-semibold tracking-wide uppercase">Insight</span>
+                </div>
+
                 <div class="mb-6 flex flex-col sm:flex-row justify-between gap-4">
                     <div>
                         <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Distribuição Mensal</p>
-                        <h3 class="font-semibold text-xl text-b_deep_blue">Origem da Negociação</h3>
+                        <h3 class="font-semibold text-xl text-b_deep_blue pr-24">Origem da Negociação</h3>
                     </div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2 pt-1">
                         <div class="flex items-center gap-1.5">
@@ -732,11 +749,17 @@
             <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
                 
                 <!-- Esquerda: Eficiência de Cobrança (7 colunas) -->
-                <div class="xl:col-span-7 bg-white rounded-[2rem] p-6 lg:p-8 xl:p-10 shadow-glass border border-b_grey_blue/10 flex flex-col reveal hover:border-b_grey_blue/20 hover:shadow-hover transition-all duration-500" aria-label="Eficiência de cobrança por tentativa: 1ª tentativa resolve 94,1% dos casos">
+                <div class="xl:col-span-7 bg-white rounded-[2rem] p-6 lg:p-8 xl:p-10 shadow-glass border border-b_grey_blue/10 flex flex-col reveal relative cursor-pointer group transition-all duration-300 hover:border-b_grey_blue/20 hover:shadow-hover hover:-translate-y-1 hover:ring-2 hover:ring-b_purple_pure/30 insight-trigger" data-insight="fadiga-notificacao" aria-label="Eficiência de cobrança por tentativa: 1ª tentativa resolve 94,1% dos casos">
+                    <!-- Indicador Visual Insight -->
+                    <div class="absolute top-6 right-6 lg:top-8 lg:right-8 flex items-center gap-1.5 px-3 py-1.5 bg-b_purple_pure/5 text-b_purple_pure rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <iconify-icon icon="solar:magic-stick-3-bold-duotone" class="text-sm"></iconify-icon>
+                        <span class="text-[10px] font-semibold tracking-wide uppercase">Insight</span>
+                    </div>
+
                     <div class="mb-6 flex justify-between items-start">
                         <div>
                             <p class="font-mono text-[10px] uppercase tracking-widest text-b_grey_blue/80 mb-1.5">Métricas de Cobrança</p>
-                            <h3 class="font-semibold text-xl text-b_deep_blue">Eficiência por Tentativa</h3>
+                            <h3 class="font-semibold text-xl text-b_deep_blue pr-24">Eficiência por Tentativa</h3>
                         </div>
                     </div>
 
@@ -860,6 +883,37 @@
         </section>
 
     </main>
+
+    <!-- Global Insight Modal -->
+    <div id="insight-modal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 ease-out px-4 py-8">
+        <!-- Backdrop -->
+        <div id="insight-modal-backdrop" class="absolute inset-0 bg-b_deep_blue/40 backdrop-blur-md cursor-pointer"></div>
+        
+        <!-- Modal Card -->
+        <div id="insight-modal-card" class="bg-white rounded-[2rem] w-full max-w-[600px] shadow-2xl relative z-10 flex flex-col overflow-hidden scale-95 opacity-0 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] max-h-full">
+            
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between p-6 lg:p-8 pb-0 shrink-0 gap-4">
+                <div class="flex items-center gap-4">
+                    <div id="insight-modal-icon-bg" class="w-12 h-12 rounded-full flex items-center justify-center shrink-0">
+                        <iconify-icon id="insight-modal-icon" icon="" class="text-2xl"></iconify-icon>
+                    </div>
+                    <div>
+                        <h3 id="insight-modal-title" class="font-semibold text-xl text-b_deep_blue tracking-tight leading-tight"></h3>
+                    </div>
+                </div>
+                <button id="insight-modal-close" class="w-10 h-10 rounded-full hover:bg-b_bone flex items-center justify-center text-b_grey_blue/50 hover:text-b_grey_blue transition-colors touch-manipulation shrink-0 -mt-1 -mr-2">
+                    <iconify-icon icon="solar:close-circle-linear" class="text-2xl"></iconify-icon>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div id="insight-modal-content" class="p-6 lg:p-8 pt-0 lg:pt-0 overflow-y-auto custom-scrollbar flex-grow">
+                <!-- Injected via JS -->
+            </div>
+            
+        </div>
+    </div>
 
     <script src="./js/dashboard.js"></script>
 </body>
